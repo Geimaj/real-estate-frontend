@@ -32,6 +32,16 @@ export default {
   async getCountries() {
     return fetch(`${API_URL}/get/country.php`).then((res) => res.json());
   },
+  async addCountry(country) {
+    console.log(JSON.stringify(country));
+    return fetch(`${API_URL}/post/country.php`, {
+      method: 'POST',
+      body: JSON.stringify(country),
+    }).then((res) => {
+      console.log(res);
+      return res.json();
+    });
+  },
   async getCities() {
     return fetch(`${API_URL}/get/city.php`).then((res) => res.json());
   },
