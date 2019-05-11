@@ -36,7 +36,7 @@
           <v-list-tile
             v-for="(address, i) in addressItems"
             :key="i"
-            @click="address"
+            @click="() => addressNav(address[0])"
           >
             <v-list-tile-title v-text="address[0]"></v-list-tile-title>
             <v-list-tile-action>
@@ -78,6 +78,11 @@ export default {
     properties() {
       this.$router.push({
         name: 'Properties',
+      });
+    },
+    addressNav(addressType) {
+      this.$router.push({
+        name: addressType,
       });
     },
   },

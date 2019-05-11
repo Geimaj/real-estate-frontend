@@ -19,9 +19,12 @@ export default {
     });
   },
   getPhoto(path) {
-    return path.trim() == ''
-      ? `${API_URL}/photos/placeholder.png`
-      : `${API_URL}${path}`;
+    let result =
+      path.trim() == ''
+        ? `${API_URL}/photos/placeholder.png`
+        : `${API_URL}${path}`;
+
+    return encodeURI(result);
   },
   async getSuburbs() {
     return fetch(`${API_URL}/get/suburb.php`).then((res) => res.json());
