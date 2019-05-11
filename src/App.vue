@@ -58,7 +58,7 @@
       </v-container>
     </v-content>
     <v-footer app fixed>
-      <span>&copy; 2017</span>
+      <span>&copy; 2019</span>
     </v-footer>
   </v-app>
 </template>
@@ -66,7 +66,7 @@
 <script>
 export default {
   data: () => ({
-    drawer: true,
+    drawer: false,
     addressItems: [
       ['Country', 'location_city'],
       ['City', 'location_city'],

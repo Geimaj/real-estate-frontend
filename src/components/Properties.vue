@@ -90,7 +90,6 @@ export default {
   methods: {
     load() {
       API.getProperties().then((properties) => {
-        console.log(properties);
         this.properties = properties;
       });
       API.getAreas().then((areas) => {

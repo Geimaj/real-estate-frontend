@@ -67,7 +67,6 @@ export default {
         id: -1,
       };
       this.dialog = true;
-      console.log(this.dialog);
     },
     editCountry() {
       this.dialog = true;
