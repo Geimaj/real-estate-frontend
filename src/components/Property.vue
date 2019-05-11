@@ -3,14 +3,13 @@
     <v-layout row wrap>
       <v-flex xs12 md4>
         <v-card>
-          <v-card-media :src="property.images[0]" height="600px">
-            hi
+          <v-card-media :src="property.photos[0]" height="600px">
           </v-card-media>
 
           <v-card-title primary-title>
             <div>
-              <h3 class="headline mb-0">{{ property.name }}</h3>
-              <div>{{ property.description }}</div>
+              <h3 class="headline mb-0">{{ property.suburb }}</h3>
+              <div>{{ property.street }}</div>
             </div>
           </v-card-title>
 
@@ -43,9 +42,7 @@
 
       <v-flex xs12 sm6 md4 lg4>
         <v-card>
-          <v-card-title
-            ><h4>{{ property.name }}</h4></v-card-title
-          >
+          <v-card-title><h4>Name</h4></v-card-title>
           <v-divider></v-divider>
           <v-list dense>
             <v-list-tile>
@@ -57,7 +54,7 @@
             <v-list-tile>
               <v-list-tile-content>Date Listed:</v-list-tile-content>
               <v-list-tile-content class="align-end">{{
-                property.date.toLocaleDateString()
+                property.price
               }}</v-list-tile-content>
             </v-list-tile>
             <v-list-tile>
@@ -75,19 +72,14 @@
             <v-list-tile>
               <v-list-tile-content>Square meters::</v-list-tile-content>
               <v-list-tile-content class="align-end">{{
-                property.squareMeters
+                property.squareMeter
               }}</v-list-tile-content>
             </v-list-tile>
-            <v-list-tile>
-              <v-list-tile-content>Status:</v-list-tile-content>
-              <v-list-tile-content class="align-end">{{
-                property.status
-              }}</v-list-tile-content>
-            </v-list-tile>
+
             <v-list-tile>
               <v-list-tile-content>Pool:</v-list-tile-content>
               <v-list-tile-content class="align-end">{{
-                property.hasPool
+                property.pool ? 'Yes' : 'No'
               }}</v-list-tile-content>
             </v-list-tile>
           </v-list>
@@ -104,13 +96,17 @@ export default {
   data() {
     return {
       property: {
-        images: [''],
+        photos: [
+          {
+            path: API.getPhoto(''),
+          },
+        ],
         date: new Date(),
       },
     };
   },
   mounted() {
-    const id = this.$route.id;
+    const id = this.$route.params.id;
     this.load(id);
   },
   methods: {

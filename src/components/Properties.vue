@@ -24,12 +24,20 @@
     <v-layout row wrap>
       <v-flex xs12 md4 v-for="property in properties" :key="property.id">
         <v-card>
-          <v-card-media :src="property.images[0]" height="400px"></v-card-media>
+          <v-card-media
+            :src="
+              (property.photo && server + property.photo) || placeholderImage
+            "
+            height="400px"
+          ></v-card-media>
 
           <v-card-title primary-title>
             <div>
-              <h3 class="headline mb-0">{{ property.name }}</h3>
-              <v-chip v-if="property.hasPool" color="primary" text-color="white"
+              <h3 class="headline mb-0">{{ property.suburb }}</h3>
+              <v-chip
+                v-if="Number(property.pool)"
+                color="primary"
+                text-color="white"
                 >Pool</v-chip
               >
               <div>{{ property.description }}</div>
@@ -67,6 +75,8 @@ export default {
       loading: false,
       select: null,
       search: null,
+      server: 'http://localhost:5000',
+      placeholderImage: `http://localhost:5000/photos/placeholder.png`,
     };
   },
   mounted() {
@@ -80,6 +90,7 @@ export default {
   methods: {
     load() {
       API.getProperties().then((properties) => {
+        console.log(properties);
         this.properties = properties;
       });
       API.getAreas().then((areas) => {
