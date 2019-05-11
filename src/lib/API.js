@@ -27,7 +27,19 @@ export default {
     return encodeURI(result);
   },
   async getSuburbs() {
-    return fetch(`${API_URL}/get/suburb.php`).then((res) => res.json());
+    return fetch(`${API_URL}/get/suburb.php`).then(async (res) => res.json());
+  },
+  async addSuburb(suburb) {
+    return fetch(`${API_URL}/post/suburb.php`, {
+      method: 'POST',
+      body: JSON.stringify({
+        name: suburb.name,
+        zip: suburb.zip,
+        cityID: suburb.city.id,
+      }),
+    }).then((res) => {
+      return res.json();
+    });
   },
   async getCountries() {
     return fetch(`${API_URL}/get/country.php`).then((res) => res.json());

@@ -14,10 +14,10 @@
           </v-card-title>
 
           <v-card-text>
-            <v-form v-model="valid" ref="form">
+            <v-form v-model="valid">
               <v-container grid-list-md>
                 <v-layout wrap>
-                  <v-flex xs12 sm6 md4>
+                  <v-flex xs12 sm6 md6 lg8>
                     <v-text-field
                       v-model="editedSuburb.name"
                       label="Suburb name"
@@ -25,7 +25,7 @@
                       required
                     ></v-text-field>
                   </v-flex>
-                  <v-flex xs12 sm6 md4>
+                  <v-flex xs12 sm6 md6>
                     <v-text-field
                       v-model="editedSuburb.zip"
                       label="ZIP"
@@ -34,7 +34,7 @@
                       required
                     ></v-text-field>
                   </v-flex>
-                  <v-flex xs12 sm6 md4>
+                  <v-flex xs12 sm6 md6>
                     <v-combobox
                       v-model="editedSuburb.city"
                       :items="cities"
@@ -82,10 +82,6 @@ export default {
         city: {
           id: '',
           name: '',
-          country: {
-            id: 0,
-            name: '',
-          },
         },
       },
       headers: [
@@ -114,14 +110,16 @@ export default {
         },
       ],
       cities: [],
-      nameRules: [(name) => !!name || 'Name is required'],
+      nameRules: [
+        (name) => name.toString().trim().lenth >= 0 || 'Name is required',
+      ],
       zipRules: [
         (zip) => !!zip || 'ZIP is required',
         (zip) => !isNaN(zip) || 'ZIP must be a valid number',
       ],
       cityRules: [
-        (city) => !!city || 'City is required',
-        (city) => ((city && city.id) || -1) > 0 || 'Valid City is required',
+        (city) => !city || 'City is required',
+        (city) => (city.id && isNaN(city)) || `City ${city} does not exist`,
       ],
     };
   },
@@ -135,19 +133,16 @@ export default {
     },
     save() {
       if (this.valid) {
-        API.addSuburb(this.editedSuburb)
+        API.addSuburb(this.suburb)
           .then((suburb) => {
             this.load();
             this.close();
           })
-          .catch((err) => {
-            alert(err);
-          });
+          .catch((error) => alert(error));
       }
     },
     close() {
       this.dialog = false;
-      this.$refs.form.reset();
     },
   },
 };
