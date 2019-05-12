@@ -53,6 +53,8 @@
           </v-data-iterator>
         </v-card>
 
+        <v-divider></v-divider>
+
         <v-card flat>
           <v-card-title>All Agents</v-card-title>
           <v-data-table :headers="headers" :items="agents" class="elevation-1">
@@ -60,6 +62,7 @@
               <td class="text-xs-right">{{ props.item.firstname }}</td>
               <td class="text-xs-right">{{ props.item.lastname }}</td>
               <td class="text-xs-right">{{ props.item.totalValueSold }}</td>
+              <td class="text-xs-right">{{ props.item.totalSales }}</td>
             </template>
           </v-data-table>
         </v-card>
@@ -91,16 +94,18 @@ export default {
           value: 'firstname',
         },
         { text: 'Last name', value: 'lastname' },
-        { text: 'Total Sales ($)', value: 'totalValueSold' },
+        { text: 'Total Sales Value($)', value: 'totalValueSold' },
+        { text: 'Properties Sold', value: 'totalSales' },
       ],
       agents: [
         {
           firstname: 'luke',
           lastname: 'malherbe',
           totalValueSold: 50,
+          totalSales: 3,
         },
       ],
-      years: [2017, 2018, 2019],
+      years: [2018],
     };
   },
   mounted() {
@@ -109,16 +114,22 @@ export default {
 
   methods: {
     load() {
-      API.getAgentMax().then((agent) => {
+      //get years for select
+      API.getSaleYears().then((years) => (this.years = years));
+      //get data for selected year
+      this.loadSalesData();
+    },
+    loadSalesData() {
+      API.getAgentMax(this.year).then((agent) => {
         this.max = agent;
       });
+      API.getAgents(this.year).then((agents) => {
+        this.agents = agents;
+      });
     },
-    search() {
-      console.log('search');
-    },
+
     yearChanged() {
-      console.log('change');
-      console.log(this.year);
+      this.loadSalesData();
     },
   },
 };

@@ -98,7 +98,6 @@ export default {
     return fetch(`${API_URL}/get/person.php`).then((res) => res.json());
   },
   async addPerson(person) {
-    console.log('add');
     return fetch(`${API_URL}/post/person.php`, {
       method: 'POST',
       body: JSON.stringify(person),
@@ -114,9 +113,27 @@ export default {
       return res.json();
     });
   },
-  async getAgentMax() {
-    return fetch(`${API_URL}/get/special/agentMax.php`).then((res) =>
-      res.json(),
+  async getAgentMax(year) {
+    return fetch(`${API_URL}/get/special/agentMax.php?year=${year}`).then(
+      (res) => res.json(),
     );
+  },
+  async getSaleYears() {
+    return fetch(`${API_URL}/get/sale.php`)
+      .then((res) => res.json())
+      .then((sales) => {
+        let years = [];
+        let result = sales
+          .map((sale) => new Date(sale.date).getUTCFullYear())
+          .sort()
+          .filter((year) => years.indexOf(year) <= -1 && years.push(year)); //remove duplicates
+
+        return years;
+      });
+  },
+  async getAgents(year) {
+    return fetch(`${API_URL}/get/stats/agents.php?year=${year}`).then((res) => {
+      return res.json();
+    });
   },
 };
