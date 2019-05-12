@@ -9,6 +9,7 @@ import City from '@/components/City';
 import Suburb from '@/components/Suburb';
 import Street from '@/components/Street';
 import People from '@/components/People';
+import Agents from '@/components/statistics/Agents';
 
 Vue.use(Router);
 
@@ -58,6 +59,11 @@ export default new Router({
       path: '/people',
       name: 'People',
       component: People,
+    },
+    {
+      path: '/statistics/agents',
+      name: 'AgentStatistics',
+      component: Agents,
     },
   ],
 });

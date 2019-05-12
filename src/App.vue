@@ -35,6 +35,25 @@
             <v-list-tile-title>People</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
+
+        <v-list-group prepend-icon="timeline" value="true">
+          <template v-slot:activator>
+            <v-list-tile>
+              <v-list-tile-title>Statistics</v-list-tile-title>
+            </v-list-tile>
+          </template>
+          <v-list-tile
+            v-for="(stat, i) in statItems"
+            :key="i"
+            @click="() => nav(stat[2])"
+          >
+            <v-list-tile-title v-text="stat[0]"></v-list-tile-title>
+            <v-list-tile-action>
+              <v-icon v-text="stat[1]"></v-icon>
+            </v-list-tile-action>
+          </v-list-tile>
+        </v-list-group>
+
         <v-list-group prepend-icon="add_location" value="true">
           <template v-slot:activator>
             <v-list-tile>
@@ -44,7 +63,7 @@
           <v-list-tile
             v-for="(address, i) in addressItems"
             :key="i"
-            @click="() => addressNav(address[0])"
+            @click="() => nav(address[0])"
           >
             <v-list-tile-title v-text="address[0]"></v-list-tile-title>
             <v-list-tile-action>
@@ -81,6 +100,12 @@ export default {
       ['Suburb', 'location_city'],
       ['Street', 'location_city'],
     ],
+    statItems: [
+      ['Agents', 'supervised_user_circle', 'AgentStatistics'],
+      ['Properties', 'location_city', 'AgentStatistics'],
+      ['Sellers', 'location_city', 'AgentStatistics'],
+      ['Buyers', 'location_city', 'AgentStatistics'],
+    ],
   }),
   methods: {
     properties() {
@@ -93,9 +118,10 @@ export default {
         name: 'People',
       });
     },
-    addressNav(addressType) {
+    nav(routeName) {
+      console.log(routeName);
       this.$router.push({
-        name: addressType,
+        name: routeName,
       });
     },
   },

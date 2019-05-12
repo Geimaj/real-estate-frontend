@@ -114,4 +114,9 @@ export default {
       return res.json();
     });
   },
+  async getAgentMax() {
+    return fetch(`${API_URL}/get/special/agentMax.php`).then((res) =>
+      res.json(),
+    );
+  },
 };
