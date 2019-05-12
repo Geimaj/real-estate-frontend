@@ -7,6 +7,8 @@ import PropertyEdit from '@/components/PropertyEdit';
 import Country from '@/components/Country';
 import City from '@/components/City';
 import Suburb from '@/components/Suburb';
+import Street from '@/components/Street';
+import People from '@/components/People';
 
 Vue.use(Router);
 
@@ -46,6 +48,16 @@ export default new Router({
       path: '/suburb',
       name: 'Suburb',
       component: Suburb,
+    },
+    {
+      path: '/street',
+      name: 'Street',
+      component: Street,
+    },
+    {
+      path: '/people',
+      name: 'People',
+      component: People,
     },
   ],
 });

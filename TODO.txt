@@ -1,0 +1,36 @@
+update ERD
+regenerate data
+
+
+PROPERTIES
+    distinguish all vs on sale
+    fix photos
+    upload photos
+
+BUY
+    show advertisements
+    add filter
+    add search
+
+SELL
+    add new house
+
+SALES
+    view past sales
+
+PEOPLE
+
+    delete
+    insert roles
+
+    search by roles ?
+
+        AGENT SCREEN ?
+
+Address
+    country UI
+    get full crud on country, city, suburb, street
+    bind input to related tables
+        city => country
+        suburb => city
+

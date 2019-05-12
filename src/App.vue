@@ -12,21 +12,29 @@
         </v-list-tile>
         <v-list-tile>
           <v-list-tile-action>
+            <v-icon>shopping_basket</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Buy</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile>
+          <v-list-tile-action>
             <v-icon>gavel</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>Sell</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile>
+
+        <v-list-tile @click="people">
           <v-list-tile-action>
-            <v-icon>assignment_ind</v-icon>
+            <v-icon>supervisor_account</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>Agents</v-list-tile-title>
+            <v-list-tile-title>People</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-
         <v-list-group prepend-icon="add_location" value="true">
           <template v-slot:activator>
             <v-list-tile>
@@ -78,6 +86,11 @@ export default {
     properties() {
       this.$router.push({
         name: 'Properties',
+      });
+    },
+    people() {
+      this.$router.push({
+        name: 'People',
       });
     },
     addressNav(addressType) {

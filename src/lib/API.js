@@ -66,4 +66,52 @@ export default {
       return res.json();
     });
   },
+  async getStreets() {
+    return fetch(`${API_URL}/get/street.php`).then((res) => res.json());
+  },
+  async addStreet(street) {
+    return fetch(`${API_URL}/post/street.php`, {
+      method: 'POST',
+      body: JSON.stringify({
+        name: street.name,
+        suburbID: street.suburb.id,
+      }),
+    }).then((res) => {
+      return res.json();
+    });
+  },
+  async updateStreet(street) {
+    return fetch(`${API_URL}/put/street.php`, {
+      method: 'PUT',
+      mode: 'cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: street.id,
+        name: street.name,
+        suburbID: street.suburb.id,
+      }),
+    }).then((res) => {
+      return res.json();
+    });
+  },
+  async getPeople() {
+    return fetch(`${API_URL}/get/person.php`).then((res) => res.json());
+  },
+  async addPerson(person) {
+    console.log('add');
+    return fetch(`${API_URL}/post/person.php`, {
+      method: 'POST',
+      body: JSON.stringify(person),
+    }).then((res) => {
+      return res.json();
+    });
+  },
+  async updatePerson(person) {
+    return fetch(`${API_URL}/put/person.php`, {
+      method: 'POST',
+      body: JSON.stringify(person),
+    }).then((res) => {
+      return res.json();
+    });
+  },
 };
