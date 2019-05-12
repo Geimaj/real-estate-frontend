@@ -118,6 +118,11 @@ export default {
       (res) => res.json(),
     );
   },
+  async getAgentAvg(year) {
+    return fetch(`${API_URL}/get/special/agentAvg.php?year=${year}`).then(
+      (res) => res.json(),
+    );
+  },
   async getSaleYears() {
     return fetch(`${API_URL}/get/sale.php`)
       .then((res) => res.json())
