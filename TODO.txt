@@ -3,14 +3,14 @@ regenerate data
 
 
 PROPERTIES
-    distinguish all vs on sale
     fix photos
     upload photos
 
 BUY
-    show advertisements
-    add filter
     add search
+        baths
+        pool
+        suburbs
 
 SELL
     add new house

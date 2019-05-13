@@ -3,12 +3,20 @@
     <v-layout row wrap>
       <v-flex xs12 md4>
         <v-card>
-          <v-card-media :src="property.photos[0]" height="600px">
+          <v-card-media
+            :src="
+              (property.photos[0] && property.photos[0].path) ||
+                getPhoto(property.photos[0])
+            "
+            height="600px"
+          >
           </v-card-media>
 
           <v-card-title primary-title>
             <div>
-              <h3 class="headline mb-0">{{ property.suburb }}</h3>
+              <h3 class="headline mb-0">
+                {{ property.suburb }}
+              </h3>
               <div>{{ property.street }}</div>
             </div>
           </v-card-title>
@@ -114,6 +122,9 @@ export default {
       API.getProperty(id).then((property) => {
         this.property = property;
       });
+    },
+    getPhoto(src) {
+      return API.getPhoto(src);
     },
   },
 };

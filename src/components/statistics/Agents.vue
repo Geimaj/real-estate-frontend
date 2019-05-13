@@ -211,14 +211,7 @@ export default {
       years: [2018],
     };
   },
-  watch: {
-    active: (active) => {
-      if (active === 0) {
-        this.headers = this.maxHeaders;
-      }
-      console.log(active);
-    },
-  },
+
   mounted() {
     this.load();
   },

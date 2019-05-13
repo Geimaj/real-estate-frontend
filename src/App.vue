@@ -10,7 +10,7 @@
             <v-list-tile-title>Properties</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile>
+        <v-list-tile @click="buy">
           <v-list-tile-action>
             <v-icon>shopping_basket</v-icon>
           </v-list-tile-action>
@@ -111,6 +111,11 @@ export default {
     properties() {
       this.$router.push({
         name: 'Properties',
+      });
+    },
+    buy() {
+      this.$router.push({
+        name: 'Buy',
       });
     },
     people() {

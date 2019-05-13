@@ -19,10 +19,12 @@ export default {
     });
   },
   getPhoto(path) {
-    let result =
-      path.trim() == ''
-        ? `${API_URL}/photos/placeholder.png`
-        : `${API_URL}${path}`;
+    let result;
+    if (!path || path.trim() === '') {
+      result = `${API_URL}/photos/placeholder.png`;
+    } else {
+      result = `${API_URL}${path}`;
+    }
 
     return encodeURI(result);
   },
@@ -140,5 +142,37 @@ export default {
     return fetch(`${API_URL}/get/stats/agents.php?year=${year}`).then((res) => {
       return res.json();
     });
+  },
+  async getAvailable(year) {
+    return fetch(`${API_URL}/get/available.php`).then((res) => {
+      return res.json();
+    });
+  },
+  searchTypes: [
+    {
+      id: 0,
+      name: 'City',
+      endpoint: `${API_URL}/get/special/cityMinMax.php`,
+      params: ['cityID', 'minPrice', 'maxPrice'],
+    },
+    { id: 1, name: 'Suburb', endpoint: `${API_URL}/get/suburb` },
+  ],
+  async searchAvailable(search) {
+    console.log(search);
+
+    if (search.searchType.id === this.searchTypes[0].id) {
+      let cityID = (search && search.id) || -1;
+      let url = `${search.searchType.endpoint}?cityID=${cityID}&minPrice=${
+        search.price.min
+      }&maxPrice=${search.price.max}`;
+      console.log(url);
+      return fetch(url).then((res) => res.json());
+    } else {
+      console.log('search burbs');
+    }
+
+    // return fetch(`${API_URL}/get/available.php`).then((res) => {
+    //   return res.json();
+    // });
   },
 };
