@@ -244,7 +244,6 @@ export default {
       };
 
       API.searchAvailable(search).then((properties) => {
-        console.log(properties);
         this.properties = properties;
       });
     },

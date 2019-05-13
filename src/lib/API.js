@@ -143,8 +143,9 @@ export default {
       return res.json();
     });
   },
-  async getAvailable(year) {
-    return fetch(`${API_URL}/get/available.php`).then((res) => {
+  async getAvailable(propertyID) {
+    let params = propertyID ? `?propertyID=${propertyID}` : '';
+    return fetch(`${API_URL}/get/available.php${params}`).then((res) => {
       return res.json();
     });
   },

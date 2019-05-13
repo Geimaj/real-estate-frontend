@@ -3,14 +3,7 @@
     <v-layout row wrap>
       <v-flex xs12 md4>
         <v-card>
-          <v-card-media
-            :src="
-              (property.photos[0] && property.photos[0].path) ||
-                getPhoto(property.photos[0])
-            "
-            height="600px"
-          >
-          </v-card-media>
+          <v-card-media :src="image" height="600px"> </v-card-media>
 
           <v-card-title primary-title>
             <div>
@@ -50,21 +43,9 @@
 
       <v-flex xs12 sm6 md4 lg4>
         <v-card>
-          <v-card-title><h4>Name</h4></v-card-title>
+          <v-card-title><h4>Property Details</h4></v-card-title>
           <v-divider></v-divider>
           <v-list dense>
-            <v-list-tile>
-              <v-list-tile-content>Price:</v-list-tile-content>
-              <v-list-tile-content class="align-end">{{
-                property.price
-              }}</v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile>
-              <v-list-tile-content>Date Listed:</v-list-tile-content>
-              <v-list-tile-content class="align-end">{{
-                property.price
-              }}</v-list-tile-content>
-            </v-list-tile>
             <v-list-tile>
               <v-list-tile-content>Bedrooms:</v-list-tile-content>
               <v-list-tile-content class="align-end">{{
@@ -93,6 +74,27 @@
           </v-list>
         </v-card>
       </v-flex>
+
+      <v-flex xs12 sm6 md4 lg4>
+        <v-card>
+          <v-card-title><h4>Listing Details</h4></v-card-title>
+          <v-divider></v-divider>
+          <v-list dense>
+            <v-list-tile>
+              <v-list-tile-content>Price:</v-list-tile-content>
+              <v-list-tile-content class="align-end">{{
+                property.price
+              }}</v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile>
+              <v-list-tile-content>Date Listed:</v-list-tile-content>
+              <v-list-tile-content class="align-end">{{
+                property.price
+              }}</v-list-tile-content>
+            </v-list-tile>
+          </v-list>
+        </v-card>
+      </v-flex>
     </v-layout>
   </v-container>
 </template>
@@ -103,15 +105,19 @@ import API from '@/lib/API';
 export default {
   data() {
     return {
+      image: '',
       property: {
         photos: [
           {
-            path: API.getPhoto(''),
+            path: '',
           },
         ],
         date: new Date(),
       },
     };
+  },
+  watch: {
+    property(val) {},
   },
   mounted() {
     const id = this.$route.params.id;
@@ -119,8 +125,23 @@ export default {
   },
   methods: {
     load(id) {
+      //get property details
       API.getProperty(id).then((property) => {
         this.property = property;
+        if (
+          property.photos &&
+          this.property.photos[0] &&
+          property.photos[0].trim() !== ''
+        ) {
+          this.image = property.photos[0];
+        } else {
+          this.image = API.getPhoto('');
+        }
+      });
+      //get listing details
+      API.getProperty(id).then((property) => {
+        console.log(property);
+        // this.property = property;
       });
     },
     getPhoto(src) {
