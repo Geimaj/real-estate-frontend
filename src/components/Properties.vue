@@ -33,12 +33,21 @@
 
           <v-card-title primary-title>
             <div>
-              <h3 class="headline mb-0">{{ property.suburb }}</h3>
+              <h3 class="headline mb-0">
+                {{ property.address.street.suburb.name }},
+                {{ property.address.street.suburb.city.name }}
+              </h3>
               <v-chip
                 v-if="Number(property.pool)"
                 color="primary"
                 text-color="white"
                 >Pool</v-chip
+              >
+              <v-chip
+                v-if="property.listingID"
+                color="warning"
+                text-color="white"
+                >For Sale</v-chip
               >
               <div>{{ property.description }}</div>
             </div>
@@ -51,7 +60,7 @@
               :to="{
                 name: 'Property',
                 params: {
-                  id: property.id,
+                  id: property.propertyID,
                 },
               }"
               >View</v-btn

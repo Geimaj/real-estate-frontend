@@ -2,16 +2,28 @@ const API_URL = 'http://localhost:5000';
 
 export default {
   getProperties() {
-    return fetch(`${API_URL}/get/property.php`).then((res) => res.json());
+    return fetch(`${API_URL}/get/propertyDetails.php`).then((res) =>
+      res.json(),
+    );
   },
   async getProperty(id) {
     id == 0 ? id : id;
     const property = await fetch(
-      `${API_URL}/get/propertyPhoto.php?id=${id}`,
+      `${API_URL}/get/propertyDetails.php?propertyID=${id}`,
     ).then((res) => res.json());
 
-    property.photos = property.photos.map((photo) => this.getPhoto(photo.path));
     return property;
+  },
+  async getPropertyPhotos(id) {
+    let photos = [{ id: '', path: '' }];
+    const propertyPhotos = await fetch(
+      `${API_URL}/get/propertyPhoto.php?propertyID=${id}`,
+    )
+      .then((res) => res.json())
+      .then((res) => (photos = res));
+
+    photos = photos.map((photo) => this.getPhoto(photo.path));
+    return photos;
   },
   getAreas() {
     return new Promise((res) => {
@@ -20,10 +32,10 @@ export default {
   },
   getPhoto(path) {
     let result;
-    if (!path || path.trim() === '') {
-      result = `${API_URL}/photos/placeholder.png`;
-    } else {
+    if (path && path.trim() !== '') {
       result = `${API_URL}${path}`;
+    } else {
+      result = `${API_URL}/photos/placeholder.png`;
     }
 
     return encodeURI(result);

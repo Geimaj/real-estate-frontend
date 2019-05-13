@@ -161,7 +161,7 @@ export default {
     return {
       year: 2018,
       tabs: ['Max', 'Average'],
-      active: 1,
+      active: 0,
       max: [
         {
           firstname: 'jamie',

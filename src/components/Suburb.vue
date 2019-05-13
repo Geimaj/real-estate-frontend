@@ -121,7 +121,7 @@ export default {
       ],
       cityRules: [
         (city) => !!city || 'City is required',
-        (city) => ((city && city.id) || -1) > 0 || 'Valid City is required',
+        (city) => ((city && city.id) || -1) > -1 || 'Valid City is required',
       ],
     };
   },
@@ -134,6 +134,7 @@ export default {
       API.getCities().then((cities) => (this.cities = cities));
     },
     save() {
+      console.log(this.editedSuburb);
       if (this.valid) {
         API.addSuburb(this.editedSuburb)
           .then((suburb) => {

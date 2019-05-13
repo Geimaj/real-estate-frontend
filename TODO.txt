@@ -1,10 +1,11 @@
 update ERD
 regenerate data
 
-
 PROPERTIES
     fix photos
     upload photos
+    EDIT ADDRESS
+
 
 BUY
     add search

@@ -10,71 +10,31 @@
       <v-form v-model="valid">
         <v-container>
           <v-layout row wrap>
-            <v-flex xs12 md4>
-              <v-text-field
-                v-model="property.price"
-                :rules="priceRules"
-                label="Price"
-                prefix="R"
-                required
-              ></v-text-field>
-            </v-flex>
-          </v-layout>
-
-          <v-layout row wrap>
-            <v-flex xs12 md4>
+            <v-flex xs3 md2>
               <v-text-field
                 v-model="property.bedrooms"
-                :rules="bedroomRules"
+                mask="###"
                 label="Bedrooms"
                 required
               ></v-text-field>
             </v-flex>
 
-            <v-flex xs12 md4>
+            <v-flex xs3 md2>
               <v-text-field
                 v-model="property.bathrooms"
-                :rules="bathroomRules"
+                mask="###"
                 label="Bathrooms"
                 required
               ></v-text-field>
             </v-flex>
 
-            <v-flex xs12 md2>
+            <v-flex xs3 md6>
               <v-checkbox v-model="property.pool" label="Pool"></v-checkbox>
             </v-flex>
 
-            <v-flex xs12 md6>
-              <v-text-field
-                v-model="property.street"
-                label="Street"
-                required
-              ></v-text-field>
-            </v-flex>
-
-            <v-flex xs12 md6>
+            <v-flex xs12 md4>
               <v-combobox
-                v-model="property.suburb"
-                :items="suburbs"
-                item-text="name"
-                item-value="id"
-                label="Suburb"
-              ></v-combobox>
-            </v-flex>
-
-            <v-flex xs12 md6>
-              <v-combobox
-                v-model="property.city"
-                :items="cities"
-                item-text="name"
-                item-value="id"
-                label="City"
-              ></v-combobox>
-            </v-flex>
-
-            <v-flex xs12 md6>
-              <v-combobox
-                v-model="property.country"
+                v-model="country"
                 :items="countries"
                 item-text="name"
                 item-value="id"
@@ -82,9 +42,52 @@
               ></v-combobox>
             </v-flex>
 
-            <v-btn color="success">Save</v-btn>
-            <v-btn color="warning" @click="warning">Cancel</v-btn>
-            <v-btn color="error">Delete</v-btn>
+            <v-flex xs12 md4>
+              <v-combobox
+                v-model="city"
+                :items="filteredCities"
+                item-text="name"
+                item-value="id"
+                label="City"
+              ></v-combobox>
+            </v-flex>
+
+            <v-flex xs12 md4>
+              <v-select
+                v-model="suburb"
+                :items="filteredSuburbs"
+                item-text="name"
+                item-value="id"
+                label="Suburb"
+              ></v-select>
+            </v-flex>
+
+            <v-flex xs6 md5>
+              <v-text-field
+                v-model="address.houseNumber"
+                label="House Number"
+                required
+              ></v-text-field>
+            </v-flex>
+
+            <v-flex xs6 m5>
+              <v-select
+                v-model="street"
+                :items="filteredStreets"
+                item-text="name"
+                item-value="id"
+                label="Street"
+                required
+              ></v-select>
+            </v-flex>
+
+            <v-spacer></v-spacer>
+
+            <v-flex xs12 m12>
+              <v-btn color="success">Save</v-btn>
+              <v-btn color="warning" @click="warning">Cancel</v-btn>
+              <v-btn color="error">Delete</v-btn>
+            </v-flex>
           </v-layout>
         </v-container>
       </v-form>
@@ -118,48 +121,119 @@ export default {
         bedrooms: 0,
         bathrooms: 0,
         pool: false,
-        street: '',
-        suburb: 0,
-        city: '',
-        country: 0,
+        address: {
+          id: 0,
+          houseNumber: 0,
+          street: {
+            id: 0,
+            name: '',
+            suburb: {
+              id: 0,
+              name: '',
+              city: {
+                id: 0,
+                name: '',
+                country: {
+                  id: 0,
+                  name: '',
+                },
+              },
+            },
+          },
+        },
       },
+      country: {},
+      city: {},
+      suburb: {},
+      address: {
+        houseNumber: '',
+      },
+      street: {},
+
       suburbs: [],
       countries: [],
       cities: [],
-      bedroomRules: [
-        (bedrooms) => {
-          return true;
-        },
-      ],
-      priceRules: [
-        (price) => {
-          return true;
-        },
-      ],
-      bathroomRules: [
-        (bathrooms) => {
-          return true;
-        },
-      ],
+      streets: [],
+      filteredSuburbs: [],
+      filteredCountries: [],
+      filteredCities: [],
+      filteredStreets: [],
     };
   },
   mounted() {
     const id = this.$route.params.id;
     this.load(id);
   },
+  watch: {
+    country: {
+      handler(country, oldCountry) {
+        //update cities when country changes
+        const modelCountryID = this.property.address.street.suburb.city.country
+          .id;
+
+        if (
+          (oldCountry.id && oldCountry.id !== modelCountryID) ||
+          country.id !== modelCountryID
+        ) {
+          this.city = { id: '', name: '' };
+          this.bindCities();
+        }
+      },
+      deep: true,
+    },
+    city: {
+      handler(city, oldCity) {
+        //update suburbs when city changes
+        const modelCityID = this.property.address.street.suburb.city.id;
+
+        if (
+          (oldCity.id && oldCity.id != modelCityID) ||
+          city.id !== modelCityID
+        ) {
+          this.suburb = { id: '', name: '' };
+          this.bindSuburbs();
+        }
+      },
+      deep: true,
+    },
+    suburb: function(suburb, oldSuburb) {
+      console.log('BIND STREETS FOR ' + suburb.name + ` (${suburb.id}) `);
+      //update streets when suburb changes
+      const modelSuburbID = this.property.address.street.suburb.id;
+
+      if (
+        (oldSuburb.id && oldSuburb.id != modelSuburbID) ||
+        suburb.id !== modelSuburbID
+      ) {
+        // this.street = { id: '', name: '' };
+        this.bindStreets();
+      }
+      console.log(this.suburb);
+    },
+  },
   methods: {
     load(id) {
       API.getProperty(id).then((property) => {
-        this.property = property;
+        this.property = property[0];
+        this.country = property[0].address.street.suburb.city.country;
+        this.city = property[0].address.street.suburb.city;
+        this.suburb = property[0].address.street.suburb;
+        this.street = property[0].address.street;
       });
-      API.getSuburbs().then((suburbs) => {
-        this.suburbs = suburbs;
-      });
-      API.getCountries().then((countries) => {
-        this.countries = countries;
-      });
-      API.getCities().then((cities) => {
-        this.cities = cities;
+      Promise.all([
+        API.getSuburbs(),
+        API.getCountries(),
+        API.getCities(),
+        API.getStreets(),
+      ]).then((values) => {
+        this.suburbs = values[0];
+        this.countries = values[1];
+        this.cities = values[2];
+        this.streets = values[3];
+
+        this.bindCities();
+        this.bindSuburbs();
+        this.bindStreets();
       });
     },
     warning() {
@@ -168,6 +242,21 @@ export default {
         params: {
           id: this.$route.params.id,
         },
+      });
+    },
+    bindCities() {
+      this.filteredCities = this.cities.filter((city) => {
+        return this.country.id === city.country.id;
+      });
+    },
+    bindSuburbs() {
+      this.filteredSuburbs = this.suburbs.filter((suburb) => {
+        return this.city.id === suburb.city.id;
+      });
+    },
+    bindStreets() {
+      this.filteredStreets = this.streets.filter((street) => {
+        return this.suburb.id === street.suburb.id;
       });
     },
   },
