@@ -1,18 +1,57 @@
 const API_URL = 'http://localhost:5000';
+const emptyListing = {
+  id: -1,
+  listingPrice: 0,
+  agentID: -1,
+  buyerID: -1,
+  sellerID: -1,
+  propertyID: -1,
+  saleAmmount: 0,
+};
+const emptyProperty = {
+  propertyID: -1,
+  bedrooms: 0,
+  bathrooms: 0,
+  pool: false,
+  address: {
+    id: 0,
+    houseNumber: 0,
+    street: {
+      id: 0,
+      name: '',
+      suburb: {
+        id: 0,
+        name: '',
+        city: {
+          id: 0,
+          name: '',
+          country: {
+            id: 0,
+            name: '',
+          },
+        },
+      },
+    },
+  },
+};
 
 export default {
+  emptyProperty,
+  emptyListing,
   getProperties() {
-    return fetch(`${API_URL}/get/propertyDetails.php`).then((res) =>
-      {
-       return res.json()
-      }
-    );
+    return fetch(`${API_URL}/get/propertyDetails.php`).then((res) => {
+      return res.json();
+    });
   },
   async getProperty(id) {
     id == 0 ? id : id;
     const property = await fetch(
       `${API_URL}/get/propertyDetails.php?propertyID=${id}`,
-    ).then((res) => res.json());
+    )
+      .then((res) => res.json())
+      .catch((error) => {
+        return emptyProperty;
+      });
 
     return property;
   },
@@ -26,7 +65,6 @@ export default {
     // });
   },
   async getPropertyPhotos(id) {
-    console.log('photos for ' + id)
     let photos = [{ id: '', path: '' }];
     const propertyPhotos = await fetch(
       `${API_URL}/get/propertyPhoto.php?propertyID=${id}`,
@@ -35,8 +73,6 @@ export default {
       .then((res) => (photos = res));
 
     photos = photos.map((photo) => this.getPhoto(photo.path));
-    console.log('PHOTOS');
-    console.log(photos)
     return photos;
   },
   getAreas() {

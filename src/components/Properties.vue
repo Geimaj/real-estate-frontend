@@ -2,32 +2,26 @@
   <div>
     <v-toolbar flat>
       <v-toolbar-title>Properties</v-toolbar-title>
-
       <v-divider class="mx-2" inset vertical></v-divider>
       <v-spacer></v-spacer>
       <v-btn color="primary" dark @click="newProperty()">
         New Property
       </v-btn>
     </v-toolbar>
-    <v-data-table :headers="headers" :items="properties" class="elevation-1">
+    <v-data-table
+      :headers="headers"
+      :items="properties"
+      class="elevation-1"
+      :pagination.sync="pagination"
+    >
       <template v-slot:items="props">
         <td class="text-xs-right">
-          {{ props.item && props.item.listingPrice }}
+          {{ (props.item && props.item.listingPrice) || '(not for sale)' }}
         </td>
         <td class="text-xs-right">
-          {{ props.item && props.item.bedrooms }}
-        </td>
-        <td class="text-xs-right">
-          {{ props.item && props.item.bathrooms }}
-        </td>
-        <td class="text-xs-right">
-          {{ props.item && props.item.pool }}
-        </td>
-        <td class="text-xs-right">
-          {{ props.item && props.item.squareMeter }}
-        </td>
-        <td class="text-xs-right">
-          {{ props.item && props.item.address.street.name }}
+          <a @click="propertyClicked(props.item)">
+            {{ props.item && props.item.address.street.name }}
+          </a>
         </td>
         <td class="text-xs-right">
           {{ props.item && props.item.address.street.suburb.name }}
@@ -66,23 +60,6 @@ export default {
           value: 'listingPrice',
         },
         {
-          text: 'Beds',
-          align: 'left',
-          value: 'bedrooms',
-        },
-        {
-          text: 'Baths',
-          value: 'bathrooms',
-        },
-        {
-          text: 'Pool',
-          value: 'pool',
-        },
-        {
-          text: 'square Meters',
-          value: 'squareMeter',
-        },
-        {
           text: 'Street',
           value: 'address.street.name',
         },
@@ -105,13 +82,9 @@ export default {
         },
       ],
       properties: [],
-      items: [],
-      areas: [],
-      loading: false,
-      select: null,
-      search: null,
-      server: 'http://localhost:5000',
-      placeholderImage: `http://localhost:5000/photos/placeholder.png`,
+      pagination: {
+        sortBy: 'listingPrice',
+      },
     };
   },
   mounted() {
@@ -124,8 +97,17 @@ export default {
   },
   methods: {
     load() {
+      this.pagination.descending = true;
       API.getProperties().then((properties) => {
         this.properties = properties;
+      });
+    },
+    propertyClicked(property) {
+      this.$router.push({
+        name: 'Property',
+        params: {
+          id: property.propertyID,
+        },
       });
     },
     editItem(item) {

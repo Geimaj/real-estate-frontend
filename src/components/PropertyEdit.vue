@@ -88,7 +88,7 @@
 
             <v-flex xs12 m12>
               <v-btn color="success" @click="save">Save</v-btn>
-              <v-btn color="warning" @click="warning">Cancel</v-btn>
+              <v-btn color="warning" @click="cancel">Cancel</v-btn>
             </v-flex>
           </v-layout>
         </v-container>
@@ -146,7 +146,7 @@
 
             <v-flex xs12 m12>
               <v-btn color="success" @click="addListing">Save</v-btn>
-              <v-btn color="warning" @click="warning">Cancel</v-btn>
+              <v-btn color="warning" @click="cancel">Cancel</v-btn>
             </v-flex>
 
             <v-flex v-if="listing.id >= 0" xs12 m12>
@@ -205,52 +205,17 @@
 <script>
 import API from '@/lib/API';
 
-let emptyProperty = {
-  propertyID: -1,
-  bedrooms: 0,
-  bathrooms: 0,
-  pool: false,
-  address: {
-    id: 0,
-    houseNumber: 0,
-    street: {
-      id: 0,
-      name: '',
-      suburb: {
-        id: 0,
-        name: '',
-        city: {
-          id: 0,
-          name: '',
-          country: {
-            id: 0,
-            name: '',
-          },
-        },
-      },
-    },
-  },
-};
-let emptyListing = {
-  id: -1,
-  listingPrice: 0,
-  agentID: -1,
-  buyerID: -1,
-  sellerID: -1,
-  propertyID: -1,
-  saleAmmount: 0,
-};
 export default {
   data() {
     return {
       valid: true,
-      property: emptyProperty,
-      listing: emptyListing,
+      property: API.emptyProperty,
+      listing: API.emptyListing,
       dialog: false,
       agents: [],
       sellers: [],
       buyers: [],
-  photos: [],
+      photos: [],
 
       country: { id: '', name: '' },
       city: { id: '', name: '' },
@@ -323,26 +288,19 @@ export default {
   methods: {
     load(id) {
       API.getProperty(id).then((property) => {
-        if (property[0]) {
-          this.property = property[0];
-          this.country = property[0].address.street.suburb.city.country;
-          this.city = property[0].address.street.suburb.city;
-          this.suburb = property[0].address.street.suburb;
-          this.street = property[0].address.street;
+        this.property = property;
+        this.country = property.address.street.suburb.city.country;
+        this.city = property.address.street.suburb.city;
+        this.suburb = property.address.street.suburb;
+        this.street = property.address.street;
 
-          this.listing = API.getAvailable(property[0].propertyID).then(
-            (res) => {
-              this.listing = res[0] || emptyListing;
-            },
-          );
+        this.listing = API.getAvailable(property.propertyID).then((res) => {
+          this.listing = res[0] || emptyListing;
+        });
 
-      API.getPropertyPhotos(this.property.propertyID).then((buyers) => {
-        this.photos = buyers;
-      });
-
-        } else {
-          this.property = emptyProperty;
-        }
+        API.getPropertyPhotos(this.property.propertyID).then((buyers) => {
+          this.photos = buyers;
+        });
       });
       API.getAgents().then((agents) => {
         this.agents = agents;
@@ -371,7 +329,6 @@ export default {
       });
     },
     addListing() {
-      console.log(this.listing.id > 0);
       if (this.listing.id > 0) {
         console.log('update listing');
       } else {
@@ -391,18 +348,13 @@ export default {
         );
       }
     },
-    warning() {
-      this.$router.push({
-        name: 'Property',
-        params: {
-          id: this.$route.params.id,
-        },
-      });
+    cancel() {
+      this.$router.go(-1);
     },
     sell() {
       API.makeSale(this.listing).then((sale) => {
-        console.log(sale)
-      })
+        console.log(sale);
+      });
     },
     bindCities() {
       this.filteredCities = this.cities.filter((city) => {
