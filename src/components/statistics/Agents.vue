@@ -73,7 +73,7 @@
             <template v-slot:items="props">
               <td class="text-xs-right">{{ props.item.firstname }}</td>
               <td class="text-xs-right">{{ props.item.lastname }}</td>
-              <td class="text-xs-right">{{ props.item.totalValueSold }}</td>
+              <td class="text-xs-right">{{ props.item.totalValue }}</td>
               <td class="text-xs-right">{{ props.item.totalSales }}</td>
             </template>
           </v-data-table>
@@ -226,13 +226,11 @@ export default {
     loadSalesData() {
       API.getAgentMax(this.year).then((agent) => {
         this.max = agent;
-        console.log("MAX")
-        console.log(agent)
       });
       API.getAgentAvg(this.year).then((agent) => {
         this.avg = agent;
       });
-      API.getAgents(this.year).then((agents) => {
+      API.getAgentStats(this.year).then((agents) => {
         this.agents = agents;
       });
     },

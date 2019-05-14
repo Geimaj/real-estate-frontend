@@ -213,7 +213,7 @@ export default {
   async getSales() {
     return fetch(`${API_URL}/get/sale.php`).then((res) => res.json());
   },
-  async getAgents(year) {
+  async getAgentStats(year) {
     return fetch(`${API_URL}/get/stats/agents.php?year=${year}`).then((res) => {
       return res.json();
     });
