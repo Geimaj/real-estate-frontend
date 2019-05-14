@@ -3,7 +3,9 @@ const API_URL = 'http://localhost:5000';
 export default {
   getProperties() {
     return fetch(`${API_URL}/get/propertyDetails.php`).then((res) =>
-      res.json(),
+      {
+       return res.json()
+      }
     );
   },
   async getProperty(id) {
@@ -24,6 +26,7 @@ export default {
     // });
   },
   async getPropertyPhotos(id) {
+    console.log('photos for ' + id)
     let photos = [{ id: '', path: '' }];
     const propertyPhotos = await fetch(
       `${API_URL}/get/propertyPhoto.php?propertyID=${id}`,
@@ -32,6 +35,8 @@ export default {
       .then((res) => (photos = res));
 
     photos = photos.map((photo) => this.getPhoto(photo.path));
+    console.log('PHOTOS');
+    console.log(photos)
     return photos;
   },
   getAreas() {

@@ -185,7 +185,7 @@ export default {
           value: 'firstname',
         },
         { text: 'Last name', value: 'lastname' },
-        { text: 'Total Sales Value($)', value: 'totalValueSold' },
+        { text: 'Total Sales Value(R)', value: 'totalValueSold' },
         { text: 'Properties Sold', value: 'totalSales' },
       ],
       avgHeaders: [
@@ -226,6 +226,8 @@ export default {
     loadSalesData() {
       API.getAgentMax(this.year).then((agent) => {
         this.max = agent;
+        console.log("MAX")
+        console.log(agent)
       });
       API.getAgentAvg(this.year).then((agent) => {
         this.avg = agent;

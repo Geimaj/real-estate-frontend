@@ -96,7 +96,7 @@
     </v-tab-item>
 
     <v-tab-item>
-      <v-flex v-for="photo in property.photos" :key="photo">
+      <v-flex v-for="photo in photos" :key="photo">
         <v-img md6 :src="photo" aspect-ratio="1" class="grey lighten-2">
           <template v-slot:placeholder>
             <v-layout fill-height align-center justify-center ma-0>
@@ -147,7 +147,6 @@
             <v-flex xs12 m12>
               <v-btn color="success" @click="addListing">Save</v-btn>
               <v-btn color="warning" @click="warning">Cancel</v-btn>
-              <v-btn v-if="listing.id >= 0" color="error">Unlist</v-btn>
             </v-flex>
 
             <v-flex v-if="listing.id >= 0" xs12 m12>
@@ -251,6 +250,8 @@ export default {
       agents: [],
       sellers: [],
       buyers: [],
+  photos: [],
+
       country: { id: '', name: '' },
       city: { id: '', name: '' },
       suburb: { id: '', name: '' },
@@ -306,7 +307,6 @@ export default {
       deep: true,
     },
     suburb: function(suburb, oldSuburb) {
-      console.log('BIND STREETS FOR ' + suburb.name + ` (${suburb.id}) `);
       //update streets when suburb changes
       const modelSuburbID = this.property.address.street.suburb.id;
 
@@ -335,6 +335,11 @@ export default {
               this.listing = res[0] || emptyListing;
             },
           );
+
+      API.getPropertyPhotos(this.property.propertyID).then((buyers) => {
+        this.photos = buyers;
+      });
+
         } else {
           this.property = emptyProperty;
         }
@@ -346,9 +351,9 @@ export default {
         this.sellers = sellers;
       });
       API.getBuyers().then((buyers) => {
-        console.log(buyers);
         this.buyers = buyers;
       });
+
       Promise.all([
         API.getSuburbs(),
         API.getCountries(),
@@ -395,7 +400,9 @@ export default {
       });
     },
     sell() {
-      API.makeSale(this.listing);
+      API.makeSale(this.listing).then((sale) => {
+        console.log(sale)
+      })
     },
     bindCities() {
       this.filteredCities = this.cities.filter((city) => {
