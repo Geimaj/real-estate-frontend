@@ -6,6 +6,9 @@
     <v-tab ripple>
       Images
     </v-tab>
+    <v-tab ripple>
+      Listing
+    </v-tab>
     <v-tab-item>
       <v-form v-model="valid">
         <v-container>
@@ -84,9 +87,8 @@
             <v-spacer></v-spacer>
 
             <v-flex xs12 m12>
-              <v-btn color="success">Save</v-btn>
+              <v-btn color="success" @click="save">Save</v-btn>
               <v-btn color="warning" @click="warning">Cancel</v-btn>
-              <v-btn color="error">Delete</v-btn>
             </v-flex>
           </v-layout>
         </v-container>
@@ -107,48 +109,155 @@
         </v-img>
       </v-flex>
     </v-tab-item>
+    <v-tab-item>
+      <v-form v-model="valid">
+        <v-container>
+          <v-layout row wrap>
+            <v-flex xs3 md4>
+              <v-text-field
+                v-model="listing.listingPrice"
+                mask="##################"
+                label="Price"
+                required
+              ></v-text-field>
+            </v-flex>
+            <v-flex xs3 md4>
+              <v-select
+                v-model="listing.agentID"
+                :items="agents"
+                label="Agent"
+                item-text="lastname"
+                item-value="agentID"
+                required
+              ></v-select>
+            </v-flex>
+            <v-flex xs3 md4>
+              <v-select
+                v-model="listing.sellerID"
+                label="Seller"
+                :items="sellers"
+                item-text="lastname"
+                item-value="agentID"
+                required
+              ></v-select>
+            </v-flex>
+
+            <v-spacer></v-spacer>
+
+            <v-flex xs12 m12>
+              <v-btn color="success">Save</v-btn>
+              <v-btn color="warning" @click="warning">Cancel</v-btn>
+              <v-btn v-if="listing.id >= 0" color="error">Unlist</v-btn>
+            </v-flex>
+
+            <v-flex v-if="listing.id >= 0" xs12 m12>
+              <v-dialog v-model="dialog" persistent max-width="600px">
+                <template v-slot:activator="{ on }">
+                  <v-btn color="error" dark v-on="on">Mark as Sold</v-btn>
+                </template>
+                <v-card>
+                  <v-card-title>
+                    <span class="headline">Sale Details</span>
+                  </v-card-title>
+                  <v-card-text>
+                    <v-container grid-list-md>
+                      <v-layout wrap>
+                        <v-flex xs12 sm6 md4>
+                          <v-select
+                            label="Buyer*"
+                            :items="buyers"
+                            v-model="listing.buyerID"
+                            item-text="lastname"
+                            item-value="id"
+                            required
+                          ></v-select>
+                        </v-flex>
+                        <v-flex xs12 sm6 md4>
+                          <v-text-field
+                            v-model="listing.salePrice"
+                            mask="##################"
+                            label="Sale Price*"
+                            required
+                          ></v-text-field>
+                        </v-flex>
+                      </v-layout>
+                    </v-container>
+                    <small>*indicates required field</small>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="blue darken-1" flat @click="dialog = false"
+                      >Close</v-btn
+                    >
+                    <v-btn color="blue darken-1" flat @click="sell()"
+                      >Save</v-btn
+                    >
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </v-flex>
+          </v-layout>
+        </v-container>
+      </v-form>
+    </v-tab-item>
   </v-tabs>
 </template>
 
 <script>
 import API from '@/lib/API';
 
+let emptyProperty = {
+  propertyID: -1,
+  bedrooms: 0,
+  bathrooms: 0,
+  pool: false,
+  address: {
+    id: 0,
+    houseNumber: 0,
+    street: {
+      id: 0,
+      name: '',
+      suburb: {
+        id: 0,
+        name: '',
+        city: {
+          id: 0,
+          name: '',
+          country: {
+            id: 0,
+            name: '',
+          },
+        },
+      },
+    },
+  },
+};
+let emptyListing = {
+  id: -1,
+  listingPrice: 0,
+  agentID: -1,
+  buyerID: -1,
+  sellerID: -1,
+  propertyID: -1,
+  saleAmmount: 0,
+};
 export default {
   data() {
     return {
       valid: true,
-      property: {
-        bedrooms: 0,
-        bathrooms: 0,
-        pool: false,
-        address: {
-          id: 0,
-          houseNumber: 0,
-          street: {
-            id: 0,
-            name: '',
-            suburb: {
-              id: 0,
-              name: '',
-              city: {
-                id: 0,
-                name: '',
-                country: {
-                  id: 0,
-                  name: '',
-                },
-              },
-            },
-          },
-        },
-      },
-      country: {},
-      city: {},
-      suburb: {},
+      property: emptyProperty,
+      listing: emptyListing,
+      dialog: false,
+      agents: [],
+      sellers: [],
+      buyers: [],
+      country: { id: '', name: '' },
+      city: { id: '', name: '' },
+      suburb: { id: '', name: '' },
       address: {
         houseNumber: '',
       },
-      street: {},
+      street: { id: '', name: '' },
 
       suburbs: [],
       countries: [],
@@ -214,11 +323,31 @@ export default {
   methods: {
     load(id) {
       API.getProperty(id).then((property) => {
-        this.property = property[0];
-        this.country = property[0].address.street.suburb.city.country;
-        this.city = property[0].address.street.suburb.city;
-        this.suburb = property[0].address.street.suburb;
-        this.street = property[0].address.street;
+        if (property[0]) {
+          this.property = property[0];
+          this.country = property[0].address.street.suburb.city.country;
+          this.city = property[0].address.street.suburb.city;
+          this.suburb = property[0].address.street.suburb;
+          this.street = property[0].address.street;
+
+          this.listing = API.getAvailable(property[0].propertyID).then(
+            (res) => {
+              this.listing = res[0] || emptyListing;
+            },
+          );
+        } else {
+          this.property = emptyProperty;
+        }
+      });
+      API.getAgents().then((agents) => {
+        this.agents = agents;
+      });
+      API.getSellers().then((sellers) => {
+        this.sellers = sellers;
+      });
+      API.getBuyers().then((buyers) => {
+        console.log(buyers);
+        this.buyers = buyers;
       });
       Promise.all([
         API.getSuburbs(),
@@ -236,6 +365,17 @@ export default {
         this.bindStreets();
       });
     },
+    save() {
+      console.log(this.property);
+      if (this.property.propertyID > 0) {
+        console.log('update');
+      } else {
+        API.addProperty(this.property).then(
+          (property) => (this.property = property),
+        );
+        console.log('insert');
+      }
+    },
     warning() {
       this.$router.push({
         name: 'Property',
@@ -243,6 +383,9 @@ export default {
           id: this.$route.params.id,
         },
       });
+    },
+    sell() {
+      API.makeSale(this.listing);
     },
     bindCities() {
       this.filteredCities = this.cities.filter((city) => {

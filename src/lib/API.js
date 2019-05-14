@@ -14,6 +14,15 @@ export default {
 
     return property;
   },
+  async addProperty(property) {
+    // console.log(property);
+    // return fetch(`${API_URL}/post/country.php`, {
+    //   method: 'POST',
+    //   body: JSON.stringify(country),
+    // }).then((res) => {
+    //   return res.json();
+    // });
+  },
   async getPropertyPhotos(id) {
     let photos = [{ id: '', path: '' }];
     const propertyPhotos = await fetch(
@@ -153,8 +162,27 @@ export default {
       return res.json();
     });
   },
+  async getSellers() {
+    return fetch(`${API_URL}/get/seller.php`).then((res) => {
+      return res.json();
+    });
+  },
+  async getBuyers() {
+    return fetch(`${API_URL}/get/buyer.php`).then((res) => {
+      return res.json();
+    });
+  },
+  async makeSale(listing) {
+    return fetch(`${API_URL}/post/sale.php`, {
+      method: 'POST',
+      body: JSON.stringify(listing),
+    }).then((res) => {
+      return res.json();
+    });
+  },
   async getAvailable(propertyID) {
-    let params = propertyID ? `?propertyID=${propertyID}` : '';
+    let params =
+      propertyID && propertyID > 0 ? `?propertyID=${propertyID}` : '';
     return fetch(`${API_URL}/get/available.php${params}`).then((res) => {
       return res.json();
     });

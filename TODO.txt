@@ -1,15 +1,9 @@
 
-BUY
-    add search
-        baths
-        pool
-        suburbs
-
 SELL
     add new house
     mark house as sold
 
-
+    USE MONEY NOT VARCHAR
 
 
 

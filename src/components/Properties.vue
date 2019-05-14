@@ -1,75 +1,54 @@
 <template>
-  <v-container grid-list-md>
-    <v-layout row wrap>
-      <v-toolbar dark color="teal">
-        <v-toolbar-title>Area</v-toolbar-title>
-        <v-autocomplete
-          v-model="select"
-          :loading="loading"
-          :items="items"
-          :search-input.sync="search"
-          cache-items
-          class="mx-3"
-          flat
-          hide-no-data
-          hide-details
-          label="Search by area"
-          solo-inverted
-        ></v-autocomplete>
-        <v-btn icon>
-          <v-icon>more_vert</v-icon>
-        </v-btn>
-      </v-toolbar>
-    </v-layout>
-    <v-layout row wrap>
-      <v-flex xs12 md4 v-for="property in properties" :key="property.id">
-        <v-card>
-          <v-card-media
-            :src="
-              (property.photo && server + property.photo) || placeholderImage
-            "
-            height="400px"
-          ></v-card-media>
+  <div>
+    <v-toolbar flat>
+      <v-toolbar-title>Properties</v-toolbar-title>
 
-          <v-card-title primary-title>
-            <div>
-              <h3 class="headline mb-0">
-                {{ property.address.street.suburb.name }},
-                {{ property.address.street.suburb.city.name }}
-              </h3>
-              <v-chip
-                v-if="Number(property.pool)"
-                color="primary"
-                text-color="white"
-                >Pool</v-chip
-              >
-              <v-chip
-                v-if="property.listingID"
-                color="warning"
-                text-color="white"
-                >For Sale</v-chip
-              >
-              <div>{{ property.description }}</div>
-            </div>
-          </v-card-title>
-
-          <v-card-actions>
-            <v-btn
-              flat
-              color="primary"
-              :to="{
-                name: 'Property',
-                params: {
-                  id: property.propertyID,
-                },
-              }"
-              >View</v-btn
-            >
-          </v-card-actions>
-        </v-card>
-      </v-flex>
-    </v-layout>
-  </v-container>
+      <v-divider class="mx-2" inset vertical></v-divider>
+      <v-spacer></v-spacer>
+      <v-btn color="primary" dark @click="newProperty()">
+        New Property
+      </v-btn>
+    </v-toolbar>
+    <v-data-table :headers="headers" :items="properties" class="elevation-1">
+      <template v-slot:items="props">
+        <td class="text-xs-right">
+          {{ props.item && props.item.listingPrice }}
+        </td>
+        <td class="text-xs-right">
+          {{ props.item && props.item.bedrooms }}
+        </td>
+        <td class="text-xs-right">
+          {{ props.item && props.item.bathrooms }}
+        </td>
+        <td class="text-xs-right">
+          {{ props.item && props.item.pool }}
+        </td>
+        <td class="text-xs-right">
+          {{ props.item && props.item.squareMeter }}
+        </td>
+        <td class="text-xs-right">
+          {{ props.item && props.item.address.street.name }}
+        </td>
+        <td class="text-xs-right">
+          {{ props.item && props.item.address.street.suburb.name }}
+        </td>
+        <td class="text-xs-right">
+          {{ props.item && props.item.address.street.suburb.city.name }}
+        </td>
+        <td class="text-xs-right">
+          {{ props.item && props.item.address.street.suburb.city.country.name }}
+        </td>
+        <td class="justify-center layout px-0">
+          <v-icon small class="mr-2" @click="editItem(props.item)">
+            edit
+          </v-icon>
+          <v-icon small @click="deleteItem(props.item)">
+            delete
+          </v-icon>
+        </td>
+      </template>
+    </v-data-table>
+  </div>
 </template>
 
 <script>
@@ -78,6 +57,53 @@ import API from '@/lib/API';
 export default {
   data() {
     return {
+      dialog: false,
+      valid: true,
+      headers: [
+        {
+          text: 'Price',
+          align: 'left',
+          value: 'listingPrice',
+        },
+        {
+          text: 'Beds',
+          align: 'left',
+          value: 'bedrooms',
+        },
+        {
+          text: 'Baths',
+          value: 'bathrooms',
+        },
+        {
+          text: 'Pool',
+          value: 'pool',
+        },
+        {
+          text: 'square Meters',
+          value: 'squareMeter',
+        },
+        {
+          text: 'Street',
+          value: 'address.street.name',
+        },
+        {
+          text: 'Suburb',
+          value: 'address.street.suburb.name',
+        },
+        {
+          text: 'City',
+          value: 'address.street.suburb.city.name',
+        },
+        {
+          text: 'Country',
+          value: 'address.street.suburb.city.country.name',
+        },
+
+        {
+          text: 'Actions',
+          sortabble: false,
+        },
+      ],
       properties: [],
       items: [],
       areas: [],
@@ -101,17 +127,22 @@ export default {
       API.getProperties().then((properties) => {
         this.properties = properties;
       });
-      API.getAreas().then((areas) => {
-        this.areas = areas;
+    },
+    editItem(item) {
+      this.$router.push({
+        name: 'PropertyEdit',
+        params: {
+          id: item.propertyID,
+        },
       });
     },
-    querySelections(val) {
-      this.loading = true;
-      this.items = this.areas.filter((x) => {
-        x.toLowerCase().indexOf(val.toLowerCase()) > -1;
+    newProperty() {
+      this.$router.push({
+        name: 'PropertyEdit',
+        params: {
+          id: -1,
+        },
       });
-
-      this.loading = false;
     },
   },
 };
