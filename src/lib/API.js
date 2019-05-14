@@ -126,6 +126,15 @@ export default {
       return res.json();
     });
   },
+  async addListing(listing) {
+    console.log(listing);
+    return fetch(`${API_URL}/post/availible.php`, {
+      method: 'POST',
+      body: JSON.stringify(listing),
+    }).then((res) => {
+      return res.json();
+    });
+  },
   async updatePerson(person) {
     return fetch(`${API_URL}/put/person.php`, {
       method: 'POST',
@@ -156,6 +165,9 @@ export default {
 
         return years;
       });
+  },
+  async getSales() {
+    return fetch(`${API_URL}/get/sale.php`).then((res) => res.json());
   },
   async getAgents(year) {
     return fetch(`${API_URL}/get/stats/agents.php?year=${year}`).then((res) => {

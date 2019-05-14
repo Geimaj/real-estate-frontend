@@ -11,6 +11,7 @@ import Street from '@/components/Street';
 import People from '@/components/People';
 import Agents from '@/components/statistics/Agents';
 import Buy from '@/components/Buy';
+import Sales from '@/components/Sales';
 
 Vue.use(Router);
 
@@ -19,7 +20,7 @@ export default new Router({
     {
       path: '/',
       name: 'HelloWorld',
-      component: HelloWorld,
+      component: Properties,
     },
     {
       path: '/properties',
@@ -70,6 +71,11 @@ export default new Router({
       path: '/statistics/agents',
       name: 'AgentStatistics',
       component: Agents,
+    },
+    {
+      path: '/sales',
+      name: 'Sales',
+      component: Sales,
     },
   ],
 });

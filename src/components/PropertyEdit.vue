@@ -6,7 +6,7 @@
     <v-tab ripple>
       Images
     </v-tab>
-    <v-tab ripple>
+    <v-tab ripple v-if="property.propertyID > 0">
       Listing
     </v-tab>
     <v-tab-item>
@@ -145,7 +145,7 @@
             <v-spacer></v-spacer>
 
             <v-flex xs12 m12>
-              <v-btn color="success">Save</v-btn>
+              <v-btn color="success" @click="addListing">Save</v-btn>
               <v-btn color="warning" @click="warning">Cancel</v-btn>
               <v-btn v-if="listing.id >= 0" color="error">Unlist</v-btn>
             </v-flex>
@@ -365,6 +365,17 @@ export default {
         this.bindStreets();
       });
     },
+    addListing() {
+      console.log(this.listing.id > 0);
+      if (this.listing.id > 0) {
+        console.log('update listing');
+      } else {
+        console.log('add listin');
+        API.addListing(this.listing).then((listing) => {
+          this.listing = listing;
+        });
+      }
+    },
     save() {
       console.log(this.property);
       if (this.property.propertyID > 0) {
@@ -373,7 +384,6 @@ export default {
         API.addProperty(this.property).then(
           (property) => (this.property = property),
         );
-        console.log('insert');
       }
     },
     warning() {

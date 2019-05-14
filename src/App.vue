@@ -18,12 +18,12 @@
             <v-list-tile-title>Buy</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile>
+        <v-list-tile @click="sales">
           <v-list-tile-action>
             <v-icon>gavel</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>Sell</v-list-tile-title>
+            <v-list-tile-title>Sales</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
 
@@ -102,9 +102,9 @@ export default {
     ],
     statItems: [
       ['Agents', 'supervised_user_circle', 'AgentStatistics'],
-      ['Properties', 'location_city', 'AgentStatistics'],
-      ['Sellers', 'location_city', 'AgentStatistics'],
-      ['Buyers', 'location_city', 'AgentStatistics'],
+      // ['Properties', 'location_city', 'AgentStatistics'],
+      // ['Sellers', 'location_city', 'AgentStatistics'],
+      // ['Buyers', 'location_city', 'AgentStatistics'],
     ],
   }),
   methods: {
@@ -127,6 +127,11 @@ export default {
       console.log(routeName);
       this.$router.push({
         name: routeName,
+      });
+    },
+    sales() {
+      this.$router.push({
+        name: 'Sales',
       });
     },
   },
