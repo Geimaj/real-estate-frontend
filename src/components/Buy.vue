@@ -23,10 +23,9 @@
         <v-autocomplete
           v-model="select"
           :loading="loading"
-          :items="filteredSuburbs"
+          :items="filteredSearchItems"
           :search-input.sync="search"
           item-text="name"
-          cache-items
           class="mx-3"
           flat
           hide-no-data
@@ -39,11 +38,11 @@
         <template v-slot:extension>
           <v-toolbar-items>
             <v-flex xs2 md1>
-              <v-select label="Beds" v-model="beds" :items="bedItems">
+              <v-select label="Beds" v-model="beds" :items="bedBathItems">
               </v-select>
             </v-flex>
             <v-flex xs2 md1>
-              <v-select label="Baths" v-model="baths" :items="bathItems">
+              <v-select label="Baths" v-model="baths" :items="bedBathItems">
               </v-select>
             </v-flex>
             <v-flex xs2 md1>
@@ -51,8 +50,9 @@
                 label="Pool"
                 v-model="pool"
                 :items="poolItems"
-                item-value="id"
-                item-text="value"
+                return-object
+                item-value="value"
+                item-text="text"
               >
               </v-select>
             </v-flex>
@@ -95,16 +95,24 @@
                 {{ property.address.street.suburb.name }},
                 {{ property.address.street.suburb.city.name }}
               </h3>
-
+              <v-chip color="teal" text-color="white"
+                >{{ property.beds }} beds</v-chip
+              >
+              <v-chip color="light-green" text-color="white"
+                >{{ property.baths }} baths</v-chip
+              >
               <v-chip
-                v-if="Number(property.pool)"
+                v-if="Number(property.pool) > 0"
                 color="primary"
                 text-color="white"
                 >Pool</v-chip
               >
+              <v-divider></v-divider>
               <div>{{ property.description }}</div>
-              <div>{{ property.street }}</div>
-              <div>R{{ property.listingPrice }}</div>
+              <div>{{ property.address.street.name }}</div>
+              <div>
+                <h4>R{{ property.listingPrice }}</h4>
+              </div>
             </div>
           </v-card-title>
 
@@ -135,37 +143,19 @@ export default {
     return {
       searchTypes: [],
       searchType: {},
-      bedItems: ['0+', '1', '2', '3', '4', '5+'],
-      beds: '0+',
-      bathItems: ['0+', '1', '2', '3', '4', '5+'],
-      baths: '0+',
-      poolItems: [
-        {
-          id: 0,
-          value: 'Any',
-        },
-        {
-          id: 1,
-          value: 'Pool',
-        },
-        {
-          id: 2,
-          value: 'No Pool',
-        },
-      ],
-      pool: {
-        id: 0,
-        value: 'Any',
-      },
+      beds: API.bedBathItems[0],
+      bedBathItems: API.bedBathItems,
+      baths: API.bedBathItems[0],
+      poolItems: API.poolItems,
+      pool: API.poolItems[0],
       price: {
         min: null,
         max: null,
       },
       properties: [],
       suburbs: [],
-      filteredSuburbs: [],
+      filteredSearchItems: [],
       cities: [],
-      filteredCities: [],
       loading: false,
       select: null,
       search: null,
@@ -183,20 +173,11 @@ export default {
     select(val) {
       this.doSearch();
     },
-    searchType(val) {
-      this.filteredSuburbs = [];
-      if (val.id == 0) {
-        this.filteredSuburbs = this.suburbs.map((suburb) => suburb.city);
-      } else {
-        this.filteredSuburbs = this.suburbs;
-      }
-    },
   },
   methods: {
     load() {
       API.getAvailable().then((properties) => {
         this.properties = properties;
-        this.filteredProperties = properties;
 
         let suburbIds = [];
         let uniqueSuburbs = properties
@@ -208,8 +189,18 @@ export default {
             );
           });
 
+        let cityIds = [];
+        let uniqueCities = uniqueSuburbs
+          .map((suburb) => suburb.city)
+          .sort((a, b) => a.id > b.id)
+          .filter((city, index, self) => {
+            return cityIds.indexOf(city.id) < 0 && cityIds.push(city.id);
+          });
+
+        this.cities = uniqueCities;
         this.suburbs = uniqueSuburbs;
-        this.filteredSuburbs = uniqueSuburbs;
+
+        this.filteredSearchItems = uniqueCities;
 
         let searchTyes = API.searchTypes;
         this.searchTypes = searchTyes;
@@ -228,6 +219,13 @@ export default {
     },
     searchTypeChanged(type) {
       this.searchType = type;
+      if (type.id == 0) {
+        //search cities
+        this.filteredSearchItems = this.cities;
+      } else {
+        //search burbs
+        this.filteredSearchItems = this.suburbs;
+      }
     },
     doSearch() {
       let search = {

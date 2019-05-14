@@ -168,24 +168,56 @@ export default {
       endpoint: `${API_URL}/get/special/cityMinMax.php`,
       params: ['cityID', 'minPrice', 'maxPrice'],
     },
-    { id: 1, name: 'Suburb', endpoint: `${API_URL}/get/suburb` },
+    { id: 1, name: 'Suburb', endpoint: `${API_URL}/get/search/search.php` },
+  ],
+  bedBathItems: Array.apply(null, Array(5)).map((x, i) => {
+    return {
+      text: `${i}+`,
+      value: i,
+    };
+  }),
+  poolItems: [
+    {
+      text: 'Any',
+      value: '1,0',
+    },
+    {
+      text: 'Pool',
+      value: '1',
+    },
+    {
+      text: 'No Pool',
+      value: '0',
+    },
   ],
   async searchAvailable(search) {
     console.log(search);
 
-    if (search.searchType.id === this.searchTypes[0].id) {
-      let cityID = (search && search.id) || -1;
-      let url = `${search.searchType.endpoint}?cityID=${cityID}&minPrice=${
-        search.price.min
-      }&maxPrice=${search.price.max}`;
-      console.log(url);
-      return fetch(url).then((res) => res.json());
-    } else {
-      console.log('search burbs');
-    }
+    let cityID =
+      search && search.search && search.searchType.id == 0
+        ? search.search.id
+        : -1;
+    let suburbID =
+      search && search.search && search.searchType.id == 1
+        ? search.search.id
+        : -1;
+    let minPrice = search.price.min || 0;
+    let maxPrice = search.price.max || -1;
+    let pool = search.pool.value;
+    let baths = search.baths.value || 0;
+    let beds = search.beds.value || 0;
 
-    // return fetch(`${API_URL}/get/available.php`).then((res) => {
-    //   return res.json();
-    // });
+    let url = `${API_URL}/get/search/search.php?cityID=${cityID}&\
+suburbID=${suburbID}&\
+minPrice=${minPrice}&\
+maxPrice=${maxPrice}&\
+pool=${pool}&\
+beds=${beds}&\
+baths=${baths}`;
+
+    url = encodeURI(url);
+
+    console.log(url);
+    return fetch(url).then((res) => res.json());
   },
 };
