@@ -1,11 +1,3 @@
-update ERD
-regenerate data
-
-PROPERTIES
-    fix photos
-    upload photos
-    EDIT ADDRESS
-
 
 BUY
     add search
@@ -15,6 +7,31 @@ BUY
 
 SELL
     add new house
+    mark house as sold
+
+
+
+
+
+
+
+
+
+update ERD
+regenerate data
+
+PROPERTIES
+    fix photos
+    upload photos
+    EDIT ADDRESS
+
+
+
+
+
+
+
+
 
 SALES
     view past sales
@@ -22,11 +39,7 @@ SALES
 PEOPLE
 
     delete
-    insert roles
-
-    search by roles ?
-
-        AGENT SCREEN ?
+    move role onto person table?
 
 Address
     country UI

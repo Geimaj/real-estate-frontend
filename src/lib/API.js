@@ -108,9 +108,7 @@ export default {
       return res.json();
     });
   },
-  async getPeople() {
-    return fetch(`${API_URL}/get/person.php`).then((res) => res.json());
-  },
+
   async addPerson(person) {
     return fetch(`${API_URL}/post/person.php`, {
       method: 'POST',
@@ -220,4 +218,34 @@ baths=${baths}`;
     console.log(url);
     return fetch(url).then((res) => res.json());
   },
+  getAgents,
+  getPeople,
+  peopleTypes: [
+    { text: 'All', data: getPeople },
+    {
+      text: 'Agents',
+      data: getAgents,
+    },
+    { text: 'Buyers', data: getBuyers },
+    { text: 'Sellers', data: getSellers },
+  ],
+  deletePerson(person) {
+    console.log(person);
+  },
 };
+
+function getBuyers() {
+  return fetch(`${API_URL}/get/buyer.php`).then((res) => res.json());
+}
+
+function getSellers() {
+  return fetch(`${API_URL}/get/seller.php`).then((res) => res.json());
+}
+
+function getAgents() {
+  return fetch(`${API_URL}/get/agent.php`).then((res) => res.json());
+}
+
+async function getPeople() {
+  return fetch(`${API_URL}/get/person.php`).then((res) => res.json());
+}

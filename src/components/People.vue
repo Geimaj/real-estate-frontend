@@ -1,7 +1,25 @@
 <template>
   <div>
     <v-toolbar flat>
-      <v-toolbar-title>People</v-toolbar-title>
+      <v-menu :nudge-width="100">
+        <template v-slot:activator="{ on }">
+          <v-toolbar-title v-on="on">
+            <span>{{ personType.text }}</span>
+            <v-icon dark>arrow_drop_down</v-icon>
+          </v-toolbar-title>
+        </template>
+
+        <v-list>
+          <v-list-tile
+            v-for="item in peopleTypes"
+            :key="item.text"
+            @click="personTypeChanged(item)"
+          >
+            <v-list-tile-title v-text="item.text"></v-list-tile-title>
+          </v-list-tile>
+        </v-list>
+      </v-menu>
+
       <v-divider class="mx-2" inset vertical></v-divider>
       <v-spacer></v-spacer>
       <v-dialog v-model="dialog" max-width="500px">
@@ -56,16 +74,16 @@
                   </v-flex>
                   <v-flex xs12 sm6 md6 lg8>
                     <v-checkbox
-                      v-model="editedPerson.buyer"
+                      v-model="editedPerson.buyerID"
                       label="Buyer"
                     ></v-checkbox>
 
                     <v-checkbox
-                      v-model="editedPerson.seller"
+                      v-model="editedPerson.sellerID"
                       label="Seller"
                     ></v-checkbox>
                     <v-checkbox
-                      v-model="editedPerson.agent"
+                      v-model="editedPerson.agentID"
                       label="Agent"
                     ></v-checkbox>
                   </v-flex>
@@ -121,6 +139,8 @@ export default {
       dialog: false,
       valid: true,
       edit: false,
+      peopleTypes: API.peopleTypes,
+      personType: API.peopleTypes[0],
       editedIndex: -1,
       person: {},
       editedPerson: {
@@ -129,9 +149,9 @@ export default {
         phone: '',
         email: '',
         dob: '',
-        buyer: false,
-        seller: false,
-        agent: false,
+        buyerID: false,
+        sellerID: false,
+        agentID: false,
       },
       defaultPerson: {
         firstname: '',
@@ -139,9 +159,9 @@ export default {
         phone: '',
         email: '',
         dob: '',
-        buyer: false,
-        seller: false,
-        agent: false,
+        buyerID: false,
+        sellerID: false,
+        agentID: false,
       },
       headers: [
         {
@@ -153,6 +173,7 @@ export default {
         { text: 'Phone', value: 'phone', sortable: false },
         { text: 'Email', value: 'email', sortable: false },
         { text: 'Date of Birth', value: 'dob' },
+        { text: 'Actions' },
       ],
       people: [
         {
@@ -201,6 +222,11 @@ export default {
       this.editedIndex = -1;
     },
     editItem(item) {
+      console.log(item);
+      console.log(item.buyerID);
+      console.log(item.sellerID);
+      console.log(item.agentID);
+
       this.editedIndex = this.people.indexOf(item);
       this.editedPerson = Object.assign({}, item);
       this.dialog = true;
@@ -208,6 +234,12 @@ export default {
     deleteItem(item) {
       confirm('Are you sure you want to delete this item?') &&
         API.deletePerson(item);
+    },
+    personTypeChanged(type) {
+      this.personType = type;
+      type.data().then((people) => {
+        this.people = people;
+      });
     },
   },
 };
