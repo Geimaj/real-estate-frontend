@@ -2,7 +2,7 @@
   <v-app id="inspire" dark>
     <v-navigation-drawer v-model="drawer" clipped fixed app>
       <v-list dense>
-        <v-list-tile @click="properties">
+        <v-list-tile @click="nav('Properties')">
           <v-list-tile-action>
             <v-icon>home</v-icon>
           </v-list-tile-action>
@@ -10,15 +10,15 @@
             <v-list-tile-title>Properties</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile @click="buy">
+        <v-list-tile @click="nav('Listings')">
           <v-list-tile-action>
             <v-icon>shopping_basket</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>Buy</v-list-tile-title>
+            <v-list-tile-title>Listings</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile @click="sales">
+        <v-list-tile @click="nav('Sales')">
           <v-list-tile-action>
             <v-icon>gavel</v-icon>
           </v-list-tile-action>
@@ -27,7 +27,7 @@
           </v-list-tile-content>
         </v-list-tile>
 
-        <v-list-tile @click="people">
+        <v-list-tile @click="nav('People')">
           <v-list-tile-action>
             <v-icon>supervisor_account</v-icon>
           </v-list-tile-action>
@@ -108,30 +108,9 @@ export default {
     ],
   }),
   methods: {
-    properties() {
-      this.$router.push({
-        name: 'Properties',
-      });
-    },
-    buy() {
-      this.$router.push({
-        name: 'Buy',
-      });
-    },
-    people() {
-      this.$router.push({
-        name: 'People',
-      });
-    },
     nav(routeName) {
-      console.log(routeName);
       this.$router.push({
         name: routeName,
-      });
-    },
-    sales() {
-      this.$router.push({
-        name: 'Sales',
       });
     },
   },

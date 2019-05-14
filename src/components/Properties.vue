@@ -16,7 +16,7 @@
     >
       <template v-slot:items="props">
         <td class="text-xs-right">
-          {{ (props.item && props.item.listingPrice) || '(not for sale)' }}
+          R {{ (props.item && props.item.listingPrice) || '(not for sale)' }}
         </td>
         <td class="text-xs-right">
           <a @click="propertyClicked(props.item)">

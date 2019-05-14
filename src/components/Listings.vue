@@ -60,7 +60,7 @@
               <v-text-field
                 label="Min Price"
                 v-model="price.min"
-                prefix="$"
+                prefix="R"
                 mask="##########"
               >
               </v-text-field>
@@ -69,7 +69,7 @@
               <v-text-field
                 label="Max Price"
                 v-model="price.max"
-                prefix="$"
+                prefix="R"
                 mask="##########"
               >
               </v-text-field>
@@ -163,7 +163,7 @@ export default {
   },
   computed: {
     searchTypeName: () => {
-      return 'Search by... ';
+      return `Search...`;
     },
   },
   mounted() {
@@ -205,12 +205,6 @@ export default {
         let searchTyes = API.searchTypes;
         this.searchTypes = searchTyes;
         this.searchType = this.searchTypes[0];
-      });
-
-      //get areas from current advertisements
-
-      API.getAreas().then((areas) => {
-        this.areas = areas;
       });
     },
     getPhoto(src) {

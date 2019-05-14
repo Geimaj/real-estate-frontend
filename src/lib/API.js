@@ -49,6 +49,9 @@ export default {
       `${API_URL}/get/propertyDetails.php?propertyID=${id}`,
     )
       .then((res) => res.json())
+      .then((properties) => {
+        return new Promise((res, rej) => res(properties[0] || emptyProperty));
+      })
       .catch((error) => {
         return emptyProperty;
       });

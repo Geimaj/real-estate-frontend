@@ -10,7 +10,7 @@ import Suburb from '@/components/Suburb';
 import Street from '@/components/Street';
 import People from '@/components/People';
 import Agents from '@/components/statistics/Agents';
-import Buy from '@/components/Buy';
+import Listings from '@/components/Listings';
 import Sales from '@/components/Sales';
 
 Vue.use(Router);
@@ -33,9 +33,9 @@ export default new Router({
       component: Property,
     },
     {
-      path: '/buy',
-      name: 'Buy',
-      component: Buy,
+      path: '/listings',
+      name: 'Listings',
+      component: Listings,
     },
     {
       path: '/property/:id/edit',
