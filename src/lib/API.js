@@ -71,6 +71,20 @@ export default {
     //   return res.json();
     // });
   },
+  async updateProperty(property) {
+    console.log(property);
+    return fetch(`${API_URL}/put/property.php`, {
+      method: 'PUT',
+      body: JSON.stringify(property),
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .catch((error) => {
+        console.log('API.updateProperty error');
+        console.log(error);
+      });
+  },
   async getPropertyPhotos(id) {
     let photos = [{ id: '', path: '' }];
     const propertyPhotos = await fetch(

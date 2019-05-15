@@ -89,6 +89,15 @@
 
             <v-spacer></v-spacer>
 
+            <v-flex xs12>
+              <v-textarea
+                outline
+                name="input-7-4"
+                label="Details"
+                v-model="property.description"
+              ></v-textarea>
+            </v-flex>
+
             <v-flex xs12 m12>
               <v-btn color="success" @click="save">Save</v-btn>
               <v-btn color="warning" @click="cancel">Cancel</v-btn>
@@ -342,7 +351,15 @@ export default {
     },
     save() {
       if (this.property.propertyID > 0) {
-        console.log('update');
+        API.updateProperty(this.property).then((property) => {
+          console.log('result:');
+          console.log(property);
+          if (property.id) {
+            this.$router.go(-1);
+          } else {
+            alert('error updating property');
+          }
+        });
       } else {
         API.addProperty(this.property).then(
           (property) => (this.property = property),

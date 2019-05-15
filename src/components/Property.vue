@@ -141,29 +141,7 @@ export default {
     return {
       image: '',
       listing: defaultListing,
-      property: {
-        date: new Date(),
-        address: {
-          id: '',
-          name: '',
-          street: {
-            id: '',
-            name: '',
-            suburb: {
-              id: '',
-              name: '',
-              city: {
-                id: '',
-                name: '',
-                country: {
-                  id: '',
-                  name: '',
-                },
-              },
-            },
-          },
-        },
-      },
+      property: API.emptyProperty,
       photos: [],
     };
   },
@@ -182,7 +160,8 @@ export default {
   methods: {
     load(id) {
       API.getProperty(id).then((property) => {
-        this.property = (property && property[0]) || API.emptyProperty;
+        console.log(property);
+        this.property = (property && property) || API.emptyProperty;
       });
       API.getAvailable(id).then((listing) => {
         this.listing = (listing && listing[0]) || defaultListing;
