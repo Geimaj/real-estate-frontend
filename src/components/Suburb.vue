@@ -98,21 +98,7 @@ export default {
         { text: 'City', value: 'city.name' },
         { text: 'Country', value: 'city.country.name' },
       ],
-      suburbs: [
-        {
-          id: 0,
-          name: 'Wynberg',
-          zip: 8005,
-          city: {
-            id: 0,
-            name: 'Cape Town',
-            country: {
-              id: 0,
-              name: 'South Africa',
-            },
-          },
-        },
-      ],
+      suburbs: [],
       cities: [],
       nameRules: [(name) => !!name || 'Name is required'],
       zipRules: [

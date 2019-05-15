@@ -175,15 +175,7 @@ export default {
         { text: 'Date of Birth', value: 'dob' },
         { text: 'Actions' },
       ],
-      people: [
-        {
-          firstname: 'Jamie',
-          lastname: 'Gregory',
-          phone: '0000000000',
-          email: 'me@test.com',
-          dob: '1/1/99',
-        },
-      ],
+      people: [],
     };
   },
   mounted() {

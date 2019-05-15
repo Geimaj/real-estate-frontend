@@ -39,9 +39,13 @@ export default {
   emptyProperty,
   emptyListing,
   getProperties() {
-    return fetch(`${API_URL}/get/propertyDetails.php`).then((res) => {
-      return res.json();
-    });
+    return fetch(`${API_URL}/get/propertyDetails.php`)
+      .then((res) => {
+        return res.json();
+      })
+      .catch((error) => {
+        return [];
+      });
   },
   async getProperty(id) {
     id == 0 ? id : id;
@@ -94,7 +98,11 @@ export default {
     return encodeURI(result);
   },
   async getSuburbs() {
-    return fetch(`${API_URL}/get/suburb.php`).then(async (res) => res.json());
+    return fetch(`${API_URL}/get/suburb.php`)
+      .then(async (res) => res.json())
+      .catch((error) => {
+        return [];
+      });
   },
   async addSuburb(suburb) {
     return fetch(`${API_URL}/post/suburb.php`, {
@@ -109,7 +117,11 @@ export default {
     });
   },
   async getCountries() {
-    return fetch(`${API_URL}/get/country.php`).then((res) => res.json());
+    return fetch(`${API_URL}/get/country.php`)
+      .then((res) => res.json())
+      .catch((error) => {
+        return [];
+      });
   },
   async addCountry(country) {
     return fetch(`${API_URL}/post/country.php`, {
@@ -120,7 +132,11 @@ export default {
     });
   },
   async getCities() {
-    return fetch(`${API_URL}/get/city.php`).then((res) => res.json());
+    return fetch(`${API_URL}/get/city.php`)
+      .then((res) => res.json())
+      .catch((error) => {
+        return [];
+      });
   },
   async addCity(city) {
     return fetch(`${API_URL}/post/city.php`, {
@@ -134,7 +150,11 @@ export default {
     });
   },
   async getStreets() {
-    return fetch(`${API_URL}/get/street.php`).then((res) => res.json());
+    return fetch(`${API_URL}/get/street.php`)
+      .then((res) => res.json())
+      .catch((error) => {
+        return [];
+      });
   },
   async addStreet(street) {
     return fetch(`${API_URL}/post/street.php`, {
@@ -188,14 +208,18 @@ export default {
     });
   },
   async getAgentMax(year) {
-    return fetch(`${API_URL}/get/special/agentMax.php?year=${year}`).then(
-      (res) => res.json(),
-    );
+    return fetch(`${API_URL}/get/special/agentMax.php?year=${year}`)
+      .then((res) => res.json())
+      .catch((error) => {
+        return [];
+      });
   },
   async getAgentAvg(year) {
-    return fetch(`${API_URL}/get/special/agentAvg.php?year=${year}`).then(
-      (res) => res.json(),
-    );
+    return fetch(`${API_URL}/get/special/agentAvg.php?year=${year}`)
+      .then((res) => res.json())
+      .catch((error) => {
+        return [];
+      });
   },
   async getSaleYears() {
     return fetch(`${API_URL}/get/sale.php`)
@@ -208,15 +232,24 @@ export default {
           .filter((year) => years.indexOf(year) <= -1 && years.push(year)); //remove duplicates
 
         return years;
+      })
+      .catch((error) => {
+        return [];
       });
   },
   async getSales() {
-    return fetch(`${API_URL}/get/sale.php`).then((res) => res.json());
+    return fetch(`${API_URL}/get/sale.php`)
+      .then((res) => res.json())
+      .catch((error) => []);
   },
   async getAgentStats(year) {
-    return fetch(`${API_URL}/get/stats/agents.php?year=${year}`).then((res) => {
-      return res.json();
-    });
+    return fetch(`${API_URL}/get/stats/agents.php?year=${year}`)
+      .then((res) => {
+        return res.json();
+      })
+      .catch((error) => {
+        return [];
+      });
   },
   async getSellers() {
     return fetch(`${API_URL}/get/seller.php`).then((res) => {
@@ -239,9 +272,13 @@ export default {
   async getAvailable(propertyID) {
     let params =
       propertyID && propertyID > 0 ? `?propertyID=${propertyID}` : '';
-    return fetch(`${API_URL}/get/available.php${params}`).then((res) => {
-      return res.json();
-    });
+    return fetch(`${API_URL}/get/available.php${params}`)
+      .then((res) => {
+        return res.json();
+      })
+      .catch((error) => {
+        return [];
+      });
   },
   searchTypes: [
     {
@@ -331,5 +368,7 @@ function getAgents() {
 }
 
 async function getPeople() {
-  return fetch(`${API_URL}/get/person.php`).then((res) => res.json());
+  return fetch(`${API_URL}/get/person.php`)
+    .then((res) => res.json())
+    .catch((error) => []);
 }

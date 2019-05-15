@@ -198,16 +198,7 @@ export default {
         { text: 'Avg Sale Ammount', value: 'avgSales' },
         { text: 'Avg Time on Market', value: 'avgTimeOnMarket' },
       ],
-      agents: [
-        {
-          firstname: 'luke',
-          lastname: 'malherbe',
-          totalValueSold: 50,
-          totalSales: 3,
-          avgSales: 0,
-          avgTimeOnMarket: 0,
-        },
-      ],
+      agents: [],
       years: [2018],
     };
   },
