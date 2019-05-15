@@ -340,7 +340,7 @@ export default {
     },
     save() {
       console.log(this.property);
-      if (this.property.propertyID > 0) {
+      if (this.property.id > 0) {
         console.log('update');
       } else {
         API.addProperty(this.property).then(

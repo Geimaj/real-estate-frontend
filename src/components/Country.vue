@@ -88,21 +88,26 @@ export default {
       });
     },
     editCountry(country) {
+      this.country = country;
       this.dialog = true;
     },
     deleteCountry(country) {},
     save() {
-      API.addCountry(this.country)
-        .then((country) => {
-          this.load();
-        })
-        .catch((error) => alert(`error adding country. ${error}`));
+      if (this.country.id <= 0) {
+        API.addCountry(this.country)
+          .then((country) => {
+            this.load();
+          })
+          .catch((error) => alert(`error adding country. ${error}`));
+      } else {
+        console.log('update');
+      }
 
       this.close();
     },
     close() {
       this.dialog = false;
-      this.countryName = '';
+      this.country = { id: -1, name: '' };
     },
   },
 };

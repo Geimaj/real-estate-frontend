@@ -54,10 +54,10 @@
           </v-list-tile>
         </v-list-group>
 
-        <v-list-group prepend-icon="add_location" value="true">
+        <v-list-group prepend-icon="add_location" value="false">
           <template v-slot:activator>
             <v-list-tile>
-              <v-list-tile-title>Address</v-list-tile-title>
+              <v-list-tile-title>Locations</v-list-tile-title>
             </v-list-tile>
           </template>
           <v-list-tile

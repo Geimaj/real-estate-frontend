@@ -110,9 +110,9 @@
           <v-list dense>
             <v-list-tile>
               <v-list-tile-content>Price:</v-list-tile-content>
-              <v-list-tile-content class="align-end">R{{
-                listing.listingPrice
-              }}</v-list-tile-content>
+              <v-list-tile-content class="align-end"
+                >R{{ listing.listingPrice }}</v-list-tile-content
+              >
             </v-list-tile>
             <v-list-tile>
               <v-list-tile-content>Date Listed:</v-list-tile-content>
@@ -133,8 +133,8 @@ import API from '@/lib/API';
 let defaultListing = {
   id: '',
   listingDate: '',
-  listingPrice: ''
-}
+  listingPrice: '',
+};
 
 export default {
   data() {
@@ -181,19 +181,13 @@ export default {
   },
   methods: {
     load(id) {
-      //get property details
       API.getProperty(id).then((property) => {
-
-        this.property = property && property[0];
+        this.property = (property && property[0]) || API.emptyProperty;
       });
       API.getAvailable(id).then((listing) => {
-        console.log(listing)
-        this.listing = listing[0] || defaultListing;
-        // this.photos = photos;
+        this.listing = (listing && listing[0]) || defaultListing;
       });
       API.getPropertyPhotos(id).then((photos) => {
-        console.log('photos')
-        // console.log(photos)
         this.photos = photos;
       });
     },
