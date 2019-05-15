@@ -36,23 +36,25 @@
             </v-flex>
 
             <v-flex xs12 md4>
-              <v-combobox
+              <v-select
                 v-model="country"
                 :items="countries"
                 item-text="name"
                 item-value="id"
                 label="Country"
-              ></v-combobox>
+                return-object
+              ></v-select>
             </v-flex>
 
             <v-flex xs12 md4>
-              <v-combobox
+              <v-select
                 v-model="city"
                 :items="filteredCities"
                 item-text="name"
                 item-value="id"
                 label="City"
-              ></v-combobox>
+                return-object
+              ></v-select>
             </v-flex>
 
             <v-flex xs12 md4>
@@ -62,6 +64,7 @@
                 item-text="name"
                 item-value="id"
                 label="Suburb"
+                return-object
               ></v-select>
             </v-flex>
 
@@ -219,11 +222,11 @@ export default {
 
       country: { id: '', name: '' },
       city: { id: '', name: '' },
+      street: { id: '', name: '' },
       suburb: { id: '', name: '' },
       address: {
         houseNumber: '',
       },
-      street: { id: '', name: '' },
 
       suburbs: [],
       countries: [],
@@ -279,10 +282,9 @@ export default {
         (oldSuburb.id && oldSuburb.id != modelSuburbID) ||
         suburb.id !== modelSuburbID
       ) {
-        // this.street = { id: '', name: '' };
+        this.street = { id: '', name: '' };
         this.bindStreets();
       }
-      console.log(this.suburb);
     },
   },
   methods: {
@@ -318,9 +320,9 @@ export default {
         API.getCities(),
         API.getStreets(),
       ]).then((values) => {
-        this.suburbs = values[0];
         this.countries = values[1];
         this.cities = values[2];
+        this.suburbs = values[0];
         this.streets = values[3];
 
         this.bindCities();
@@ -339,8 +341,7 @@ export default {
       }
     },
     save() {
-      console.log(this.property);
-      if (this.property.id > 0) {
+      if (this.property.propertyID > 0) {
         console.log('update');
       } else {
         API.addProperty(this.property).then(
