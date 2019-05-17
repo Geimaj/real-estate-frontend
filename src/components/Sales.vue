@@ -2,29 +2,26 @@
   <div>
     <v-toolbar flat>
       <v-toolbar-title>Sales</v-toolbar-title>
-
       <v-divider class="mx-2" inset vertical></v-divider>
-      <v-spacer></v-spacer>
-      <v-btn color="primary" dark @click="newProperty()">
-        New Property
-      </v-btn>
     </v-toolbar>
-    <v-data-table :headers="headers" :items="properties" class="elevation-1">
+    <v-data-table :headers="headers" :items="sales" class="elevation-1">
       <template v-slot:items="props">
         <td class="text-xs-right">
-          {{ props.item && props.item.listingPrice }}
+          {{ props.item.amount }}
         </td>
         <td class="text-xs-right">
-          {{ props.item && props.item.bedrooms }}
+          <a :href="`/#/property/${props.item.propertyID}`">
+            {{ props.item.propertyID }}
+          </a>
         </td>
         <td class="text-xs-right">
-          {{ props.item && props.item.bathrooms }}
+          {{ props.item.date }}
         </td>
         <td class="text-xs-right">
-          {{ props.item && props.item.pool }}
+          {{ props.item.agentID }}
         </td>
         <td class="text-xs-right">
-          {{ props.item && props.item.squareMeter }}
+          {{ props.item.buyerID }}
         </td>
       </template>
     </v-data-table>
@@ -37,48 +34,44 @@ import API from '@/lib/API';
 export default {
   data() {
     return {
-      dialog: false,
-      valid: true,
+      sales: [],
       headers: [
         {
           text: 'Price',
           align: 'left',
-          value: 'listingPrice',
+          value: 'amount',
+        },
+        {
+          text: 'Property',
+          align: 'left',
+          value: 'propertyID',
+        },
+        {
+          text: 'Date',
+          align: 'left',
+          value: 'date',
         },
         {
           text: 'Agent',
           align: 'left',
-          value: 'listingPrice',
+          value: 'agentID',
         },
         {
           text: 'Buyer',
           align: 'left',
-          value: 'listingPrice',
+          value: 'buyerID',
         },
       ],
-      properties: [],
-      items: [],
-      areas: [],
-      loading: false,
-      select: null,
-      search: null,
-      server: 'http://localhost:5000',
-      placeholderImage: `http://localhost:5000/photos/placeholder.png`,
     };
   },
   mounted() {
     this.load();
   },
-  watch: {
-    search(val) {
-      if (val && val !== this.select) this.querySelections(val);
-    },
-  },
+
   methods: {
     load() {
-      API.getSales().then((properties) => {
-        console.log(properties);
-        this.properties = properties;
+      API.getSales().then((sales) => {
+        this.sales = sales;
       });
     },
   },
