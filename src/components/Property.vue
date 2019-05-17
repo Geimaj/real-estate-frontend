@@ -1,17 +1,17 @@
 <template>
   <v-container grid-list-md>
     <v-layout row wrap>
-      <v-flex xs12 md4>
+      <v-flex xs12 md6>
         <v-card>
           <v-card-media :src="image" height="600px"> </v-card-media>
 
           <v-card-title primary-title>
             <div>
               <h3 class="headline mb-0">
-                {{ property.address.street.name }},
-                {{ property.address.street.suburb.name }}
+                {{ property.address && property.address.street.name }},
+                {{ property.address && property.address.street.suburb.name }}
               </h3>
-              <div>{{ property.street }}</div>
+              <div>{{ property.description }}</div>
             </div>
           </v-card-title>
 
@@ -77,26 +77,27 @@
             <v-list-tile>
               <v-list-tile-content>Street:</v-list-tile-content>
               <v-list-tile-content class="align-end">{{
-                property.address.street.name
+                property.address && property.address.street.name
               }}</v-list-tile-content>
             </v-list-tile>
 
             <v-list-tile>
               <v-list-tile-content>Suburb:</v-list-tile-content>
               <v-list-tile-content class="align-end">{{
-                property.address.street.suburb.name
+                property.address && property.address.street.suburb.name
               }}</v-list-tile-content>
             </v-list-tile>
             <v-list-tile>
               <v-list-tile-content>City:</v-list-tile-content>
               <v-list-tile-content class="align-end">{{
-                property.address.street.suburb.city.name
+                property.address && property.address.street.suburb.city.name
               }}</v-list-tile-content>
             </v-list-tile>
             <v-list-tile>
               <v-list-tile-content>Country:</v-list-tile-content>
               <v-list-tile-content class="align-end">{{
-                property.address.street.suburb.city.country.name
+                property.address &&
+                  property.address.street.suburb.city.country.name
               }}</v-list-tile-content>
             </v-list-tile>
           </v-list>
@@ -130,48 +131,32 @@
 <script>
 import API from '@/lib/API';
 
-let defaultListing = {
-  id: '',
-  listingDate: '',
-  listingPrice: '',
-};
-
 export default {
   data() {
     return {
       image: '',
-      listing: defaultListing,
+      listing: API.emptyListing,
       property: API.emptyProperty,
       photos: [],
     };
   },
-  watch: {
-    photos(val) {
-      this.image = (val && val[0]) || API.getPhoto('');
-    },
-    property(val) {
-      console.log(val);
-    },
-  },
+
   mounted() {
     const id = this.$route.params.id;
     this.load(id);
   },
   methods: {
     load(id) {
-      API.getProperty(id).then((property) => {
-        console.log(property);
-        this.property = (property && property) || API.emptyProperty;
+      API.getProperty(id).then(async (property) => {
+        this.property = property;
+        this.image = API.getPhoto(property.photo);
       });
-      API.getAvailable(id).then((listing) => {
-        this.listing = (listing && listing[0]) || defaultListing;
+      API.getAvailable(id).then(async (listing) => {
+        this.listing = listing;
       });
       API.getPropertyPhotos(id).then((photos) => {
         this.photos = photos;
       });
-    },
-    getPhoto(src) {
-      return API.getPhoto(src);
     },
   },
 };

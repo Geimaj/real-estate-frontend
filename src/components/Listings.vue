@@ -92,8 +92,14 @@
           <v-card-title primary-title>
             <div>
               <h3 class="headline mb-0">
-                {{ property.address.street.suburb.name }},
-                {{ property.address.street.suburb.city.name }}
+                {{
+                  property.address.street &&
+                    property.address.street.suburb.name
+                }},
+                {{
+                  property.address.street &&
+                    property.address.street.suburb.city.name
+                }}
               </h3>
               <v-chip color="teal" text-color="white"
                 >{{ property.beds }} beds</v-chip
@@ -109,7 +115,9 @@
               >
               <v-divider></v-divider>
               <div>{{ property.description }}</div>
-              <div>{{ property.address.street.name }}</div>
+              <div>
+                {{ property.address.street && property.address.street.name }}
+              </div>
               <div>
                 <h4>R{{ property.listingPrice }}</h4>
               </div>

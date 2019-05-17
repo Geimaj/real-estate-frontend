@@ -31,6 +31,14 @@
               ></v-text-field>
             </v-flex>
 
+            <v-flex xs3 md2>
+              <v-text-field
+                v-model="property.squareMeter"
+                mask="##########"
+                label="Square Meters"
+                required
+              ></v-text-field>
+            </v-flex>
             <v-flex xs3 md6>
               <v-checkbox v-model="property.pool" label="Pool"></v-checkbox>
             </v-flex>
@@ -83,6 +91,7 @@
                 item-text="name"
                 item-value="id"
                 label="Street"
+                return-object
                 required
               ></v-select>
             </v-flex>
@@ -108,7 +117,7 @@
     </v-tab-item>
 
     <v-tab-item>
-      <v-flex v-for="photo in photos" :key="photo">
+      <v-flex v-for="photo in photos" :key="photo.id">
         <v-img md6 :src="photo" aspect-ratio="1" class="grey lighten-2">
           <template v-slot:placeholder>
             <v-layout fill-height align-center justify-center ma-0>
@@ -149,7 +158,7 @@
                 label="Seller"
                 :items="sellers"
                 item-text="lastname"
-                item-value="agentID"
+                item-value="sellerID"
                 required
               ></v-select>
             </v-flex>
@@ -306,11 +315,11 @@ export default {
         this.street = property.address.street;
 
         this.listing = API.getAvailable(property.propertyID).then((res) => {
-          this.listing = res[0] || emptyListing;
+          this.listing = res;
         });
 
-        API.getPropertyPhotos(this.property.propertyID).then((buyers) => {
-          this.photos = buyers;
+        API.getPropertyPhotos(this.property.propertyID).then((photos) => {
+          this.photos = photos;
         });
       });
       API.getAgents().then((agents) => {
@@ -340,30 +349,47 @@ export default {
       });
     },
     addListing() {
+      this.listing.propertyID = this.property.propertyID;
       if (this.listing.id > 0) {
-        console.log('update listing');
+        API.updateListing(this.listing).then((listing) => {
+          this.listing = listing;
+        });
       } else {
-        console.log('add listin');
         API.addListing(this.listing).then((listing) => {
           this.listing = listing;
         });
       }
     },
     save() {
-      if (this.property.propertyID > 0) {
-        API.updateProperty(this.property).then((property) => {
-          console.log('result:');
-          console.log(property);
-          if (property.id) {
-            this.$router.go(-1);
-          } else {
-            alert('error updating property');
-          }
+      if (this.property.propertyID && this.property.propertyID > 0) {
+        const address = {
+          id: this.property.address.id,
+          houseNumber: this.address.houseNumber,
+          street: this.street,
+        };
+        API.updateAddress(address).then((address) => {
+          const property = { ...this.property };
+          property.addressID = address.id;
+
+          API.updateProperty(property).then((property) => {
+            if (property.id) {
+              this.$router.go(-1);
+            } else {
+              alert('error updating property');
+            }
+          });
         });
       } else {
-        API.addProperty(this.property).then(
-          (property) => (this.property = property),
-        );
+        const address = { ...this.address };
+        address.street = { ...this.street };
+        API.addAddress(address).then((addr) => {
+          const property = { ...this.property };
+          property.address = addr;
+
+          API.addProperty(property).then((prop) => {
+            this.property = prop;
+          });
+        });
       }
     },
     cancel() {

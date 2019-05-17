@@ -1,43 +1,79 @@
 const API_URL = 'http://localhost:5000';
-const emptyListing = {
-  id: -1,
-  listingPrice: 0,
-  agentID: -1,
-  buyerID: -1,
-  sellerID: -1,
-  propertyID: -1,
-  saleAmmount: 0,
+
+const emptyCountry = {
+  id: null,
+  name: '',
 };
+const emptyCity = {
+  id: null,
+  name: '',
+  country: emptyCountry,
+};
+const emptySuburb = {
+  id: null,
+  name: '',
+  city: emptyCity,
+};
+
+const emptyStreet = {
+  id: null,
+  name: '',
+  suburb: emptySuburb,
+};
+
+const emptyAddress = {
+  id: null,
+  houseNumber: '',
+  street: emptyStreet,
+};
+
 const emptyProperty = {
   propertyID: -1,
   bedrooms: 0,
   bathrooms: 0,
   pool: false,
-  address: {
-    id: 0,
-    houseNumber: 0,
-    street: {
-      id: 0,
-      name: '',
-      suburb: {
-        id: 0,
-        name: '',
-        city: {
-          id: 0,
-          name: '',
-          country: {
-            id: 0,
-            name: '',
-          },
-        },
-      },
-    },
-  },
+  address: emptyAddress,
 };
+
+const emptyListing = {
+  id: -1,
+  listingPrice: 0,
+  listingDate: null,
+  agentID: -1,
+  buyerID: -1,
+  sellerID: -1,
+  propertyID: -1,
+  saleAmmount: 0,
+  suburbID: -1,
+  address: emptyAddress,
+  photo: '',
+  pool: false,
+  beds: 0,
+  baths: 0,
+};
+
+async function getAvailable(propertyID) {
+  let params = propertyID && propertyID > 0 ? `?propertyID=${propertyID}` : '';
+  return fetch(`${API_URL}/get/available.php${params}`)
+    .then((res) => {
+      return res.json();
+    })
+    .then((properties) => {
+      return propertyID ? properties[0] : properties;
+    })
+    .catch((error) => {
+      return emptyListing;
+    });
+}
 
 export default {
   emptyProperty,
   emptyListing,
+  emptyCountry,
+  emptyCity,
+  emptySuburb,
+  emptyStreet,
+  emptyAddress,
   getProperties() {
     return fetch(`${API_URL}/get/propertyDetails.php`)
       .then((res) => {
@@ -48,28 +84,55 @@ export default {
       });
   },
   async getProperty(id) {
-    id == 0 ? id : id;
-    const property = await fetch(
-      `${API_URL}/get/propertyDetails.php?propertyID=${id}`,
-    )
-      .then((res) => res.json())
-      .then((properties) => {
-        return new Promise((res, rej) => res(properties[0] || emptyProperty));
+    if (id >= 0) {
+      return fetch(`${API_URL}/get/propertyDetails.php?propertyID=${id}`)
+        .then((res) => res.json())
+        .then((property) => {
+          return property[0] || emptyProperty;
+        })
+        .catch((error) => {
+          return emptyProperty;
+        });
+    } else {
+      return new Promise((res, rej) => {
+        res(emptyProperty);
+      });
+    }
+  },
+  async addAddress(address) {
+    return fetch(`${API_URL}/post/address.php`, {
+      method: 'POST',
+      body: JSON.stringify(address),
+    })
+      .then((res) => {
+        return res.json();
       })
       .catch((error) => {
-        return emptyProperty;
+        console.log('API.addAddress error');
+        console.log(error);
       });
-
-    return property;
+  },
+  async updateAddress(address) {
+    return fetch(`${API_URL}/put/address.php`, {
+      method: 'PUT',
+      body: JSON.stringify(address),
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .catch((error) => {
+        console.log('API.updateAddress error');
+        console.log(error);
+      });
   },
   async addProperty(property) {
-    // console.log(property);
-    // return fetch(`${API_URL}/post/country.php`, {
-    //   method: 'POST',
-    //   body: JSON.stringify(country),
-    // }).then((res) => {
-    //   return res.json();
-    // });
+    console.log(property);
+    return fetch(`${API_URL}/post/property.php`, {
+      method: 'POST',
+      body: JSON.stringify(property),
+    }).then((res) => {
+      return res.json();
+    });
   },
   async updateProperty(property) {
     console.log(property);
@@ -101,16 +164,7 @@ export default {
       res(['Parklands', 'Muizemberg', 'Cape Town']);
     });
   },
-  getPhoto(path) {
-    let result;
-    if (path && path.trim() !== '') {
-      result = `${API_URL}${path}`;
-    } else {
-      result = `${API_URL}/photos/placeholder.png`;
-    }
-
-    return encodeURI(result);
-  },
+  getPhoto,
   async getSuburbs() {
     return fetch(`${API_URL}/get/suburb.php`)
       .then(async (res) => res.json())
@@ -205,9 +259,16 @@ export default {
     });
   },
   async addListing(listing) {
-    console.log(listing);
-    return fetch(`${API_URL}/post/availible.php`, {
+    return fetch(`${API_URL}/post/available.php`, {
       method: 'POST',
+      body: JSON.stringify(listing),
+    }).then((res) => {
+      return res.json();
+    });
+  },
+  async updateListing(listing) {
+    return fetch(`${API_URL}/put/available.php`, {
+      method: 'PUT',
       body: JSON.stringify(listing),
     }).then((res) => {
       return res.json();
@@ -283,17 +344,7 @@ export default {
       return res.json();
     });
   },
-  async getAvailable(propertyID) {
-    let params =
-      propertyID && propertyID > 0 ? `?propertyID=${propertyID}` : '';
-    return fetch(`${API_URL}/get/available.php${params}`)
-      .then((res) => {
-        return res.json();
-      })
-      .catch((error) => {
-        return [];
-      });
-  },
+  getAvailable,
   searchTypes: [
     {
       id: 0,
@@ -385,4 +436,15 @@ async function getPeople() {
   return fetch(`${API_URL}/get/person.php`)
     .then((res) => res.json())
     .catch((error) => []);
+}
+
+function getPhoto(path) {
+  let result;
+  if (path && path.trim() !== '') {
+    result = `${API_URL}${path}`;
+  } else {
+    result = `${API_URL}/photos/placeholder.png`;
+  }
+
+  return encodeURI(result);
 }
