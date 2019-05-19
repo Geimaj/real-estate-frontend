@@ -29,8 +29,8 @@
     <v-card-text>
       <v-data-table :headers="headers" :items="salesData">
         <template v-slot:items="props">
-          <td class="text-xs-right">{{ props.item.year }}</td>
-          <td class="text-xs-right">R {{ props.item.amount }}</td>
+          <td class="text-xs-left">{{ props.item.year }}</td>
+          <td class="text-xs-left">R {{ props.item.amount }}</td>
         </template>
       </v-data-table>
     </v-card-text>
@@ -50,7 +50,7 @@ export default {
         align: 'left',
         value: 'year',
       },
-      { text: 'Total Sales', value: 'amount' },
+      { text: 'Total Sales', value: 'amount', align: 'left' },
     ],
     salesData: [],
   }),

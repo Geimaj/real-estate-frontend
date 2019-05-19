@@ -95,10 +95,10 @@ export default {
   data: () => ({
     drawer: false,
     addressItems: [
-      ['Country', 'location_city'],
-      ['City', 'location_city'],
+      ['Country', 'outlined_flag'],
+      ['City', 'commute'],
       ['Suburb', 'location_city'],
-      ['Street', 'location_city'],
+      ['Street', 'explore'],
     ],
     statItems: [
       ['Agents', 'supervised_user_circle', 'AgentStatistics'],
