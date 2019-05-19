@@ -102,7 +102,7 @@ export default {
     ],
     statItems: [
       ['Agents', 'supervised_user_circle', 'AgentStatistics'],
-      ['Yearly Performance', 'credit_card', 'SaleStatistics'],
+      ['Yearly Performance', 'assessment', 'SaleStatistics'],
     ],
   }),
   methods: {
