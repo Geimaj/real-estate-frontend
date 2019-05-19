@@ -27,18 +27,6 @@
               }"
               >Edit</v-btn
             >
-            <v-btn
-              flat
-              color="error"
-              :to="{
-                name: 'PropertyEdit',
-                params: {
-                  id: property.propertyID,
-                  tab: 2,
-                },
-              }"
-              >BUY</v-btn
-            >
           </v-card-actions>
         </v-card>
       </v-flex>

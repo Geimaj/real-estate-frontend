@@ -399,7 +399,7 @@ export default {
     },
     sell() {
       API.makeSale(this.listing).then((sale) => {
-        Alert('sold');
+        alert('sold');
         console.log(sale);
       });
     },

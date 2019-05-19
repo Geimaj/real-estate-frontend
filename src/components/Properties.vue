@@ -36,9 +36,6 @@
           <v-icon small class="mr-2" @click="editItem(props.item)">
             edit
           </v-icon>
-          <v-icon small @click="deleteItem(props.item)">
-            delete
-          </v-icon>
         </td>
       </template>
     </v-data-table>

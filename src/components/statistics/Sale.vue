@@ -1,18 +1,10 @@
 <template>
   <v-card class="text-xs-center" color="green" dark width="900">
-    <v-flex xs6 sm6 d-flex>
-      <v-select
-        v-model="year"
-        :items="years"
-        label="Year"
-        v-on:change="yearChanged"
-        outline
-      ></v-select>
-    </v-flex>
     <v-card-text>
       <v-sheet color="rgba(0, 0, 0, .12)">
         <v-sparkline
-          :value="value"
+          :value="values"
+          :labels="years"
           color="rgba(255, 255, 255, .7)"
           height="100"
           padding="24"
@@ -20,18 +12,28 @@
           smooth
         >
           <template v-slot:label="item">
-            R{{ moneyFormat(item.value) }}
+            {{ item.value }}
           </template>
         </v-sparkline>
       </v-sheet>
     </v-card-text>
 
     <v-card-text>
-      <div class="display-1 font-weight-thin">Sales in {{ year }}</div>
+      <div class="display-1 font-weight-thin">
+        Sales from {{ years[0] }} - {{ years[years.length - 1] }}
+      </div>
     </v-card-text>
 
     <v-divider></v-divider>
-    Total Sales: {{ total }}
+
+    <v-card-text>
+      <v-data-table :headers="headers" :items="salesData">
+        <template v-slot:items="props">
+          <td class="text-xs-right">{{ props.item.year }}</td>
+          <td class="text-xs-right">R {{ props.item.amount }}</td>
+        </template>
+      </v-data-table>
+    </v-card-text>
   </v-card>
 </template>
 
@@ -40,48 +42,67 @@ import API from '@/lib/API';
 
 export default {
   data: () => ({
-    value: [],
-    year: 2018,
+    values: [],
     years: [],
-    sales: [],
+    headers: [
+      {
+        text: 'Year',
+        align: 'left',
+        value: 'year',
+      },
+      { text: 'Total Sales', value: 'amount' },
+    ],
+    salesData: [],
   }),
   mounted() {
     this.load();
   },
   computed: {
-    total: function() {
-      return this.value.reduce((a, b) => a + b);
+    minYear: function() {
+      return 'zero';
+    },
+    maxYear: function() {
+      return 'now';
     },
   },
   methods: {
     load() {
-      API.getSaleYears().then((years) => (this.years = years));
+      API.getSaleYears().then((years) => (this.years = years.sort()));
       API.getSales().then((sales) => {
-        this.sales = sales;
-        this.bindSales();
+        let data = sales
+          .map((sale) => {
+            return {
+              amount: sale.amount,
+              date: sale.date,
+            };
+          })
+          .sort((saleA, saleB) => new Date(saleA.date) > new Date(saleB.date));
+
+        let saleData = {};
+
+        let result = [];
+
+        data.forEach((element) => {
+          let year = new Date(element.date).getFullYear();
+          let currentVal = saleData[year] || 0;
+          saleData[year] = Number(currentVal) + Number(element.amount);
+        });
+
+        this.salesData = saleData;
+
+        let amounts = [];
+
+        Object.keys(saleData).forEach((key, i) => {
+          // console.log(`${key} ${i} ${saleData[key]}`);
+          amounts[i] = saleData[key];
+          result.push({
+            year: key,
+            amount: saleData[key],
+          });
+        });
+        this.salesData = result;
+        this.values = amounts;
       });
-    },
-    bindSales() {
-      let s = this.sales
-        .filter((sale) => new Date(sale.date).getUTCFullYear() == this.year)
-        .map((sale) => Number(sale.amount));
-      this.value = s;
-    },
-    yearChanged(year) {
-      this.year = year;
-      this.bindSales();
-    },
-    moneyFormat(labelValue) {
-      // Nine Zeroes for Billions
-      return Math.abs(Number(labelValue)) >= 1.0e9
-        ? Math.abs(Number(labelValue)) / 1.0e9 + 'B'
-        : // Six Zeroes for Millions
-        Math.abs(Number(labelValue)) >= 1.0e6
-        ? Math.abs(Number(labelValue)) / 1.0e6 + 'M'
-        : // Three Zeroes for Thousands
-        Math.abs(Number(labelValue)) >= 1.0e3
-        ? Math.abs(Number(labelValue)) / 1.0e3 + 'K'
-        : Math.abs(Number(labelValue));
     },
   },
 };

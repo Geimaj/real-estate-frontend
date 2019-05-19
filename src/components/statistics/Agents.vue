@@ -69,6 +69,7 @@
             :headers="maxHeaders"
             :items="agents"
             class="elevation-1"
+            :pagination.sync="pagination"
           >
             <template v-slot:items="props">
               <td class="text-xs-right">{{ props.item.firstname }}</td>
@@ -185,7 +186,7 @@ export default {
           value: 'firstname',
         },
         { text: 'Last name', value: 'lastname' },
-        { text: 'Total Sales Value(R)', value: 'totalValueSold' },
+        { text: 'Total Sales Value(R)', value: 'totalValue' },
         { text: 'Properties Sold', value: 'totalSales' },
       ],
       avgHeaders: [
@@ -200,6 +201,10 @@ export default {
       ],
       agents: [],
       years: [2018],
+      pagination: {
+        sortBy: 'totalValue',
+        descending: true,
+      },
     };
   },
 

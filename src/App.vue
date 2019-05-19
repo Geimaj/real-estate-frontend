@@ -102,10 +102,7 @@ export default {
     ],
     statItems: [
       ['Agents', 'supervised_user_circle', 'AgentStatistics'],
-      ['Sales', 'supervised_user_circle', 'SaleStatistics'],
-      // ['Properties', 'location_city', 'AgentStatistics'],
-      // ['Sellers', 'location_city', 'AgentStatistics'],
-      // ['Buyers', 'location_city', 'AgentStatistics'],
+      ['Yearly Performance', 'credit_card', 'SaleStatistics'],
     ],
   }),
   methods: {
