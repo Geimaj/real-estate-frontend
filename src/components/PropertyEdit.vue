@@ -313,8 +313,10 @@ export default {
         this.city = property.address.street.suburb.city;
         this.suburb = property.address.street.suburb;
         this.street = property.address.street;
+        this.address = property.address;
 
         this.listing = API.getAvailable(property.propertyID).then((res) => {
+          console.log(res);
           this.listing = res;
         });
 
@@ -397,6 +399,7 @@ export default {
     },
     sell() {
       API.makeSale(this.listing).then((sale) => {
+        Alert('sold');
         console.log(sale);
       });
     },

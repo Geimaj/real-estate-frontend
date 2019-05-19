@@ -194,7 +194,6 @@ export default {
     },
     save() {
       if (this.valid) {
-        console.log(this.editedIndex);
         let promise =
           this.editedIndex === -1
             ? API.addPerson(this.editedPerson)
@@ -202,6 +201,20 @@ export default {
 
         promise
           .then((res) => {
+            if (this.editedPerson.agentID) {
+              API.addAgent(res.id).then((agent) => {
+                console.log(agent);
+              });
+              API.addBuyer(res.id).then((buyer) => {
+                console.log(buyer);
+              });
+              API.addSeller(res.id).then((seller) => {
+                console.log(seller);
+              });
+            } else {
+              //delete agent
+            }
+
             this.load();
             this.close();
           })

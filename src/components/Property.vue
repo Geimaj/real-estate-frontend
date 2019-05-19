@@ -31,9 +31,10 @@
               flat
               color="error"
               :to="{
-                name: 'Property',
+                name: 'PropertyEdit',
                 params: {
                   id: property.propertyID,
+                  tab: 2,
                 },
               }"
               >BUY</v-btn

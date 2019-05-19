@@ -1,4 +1,7 @@
-const API_URL = 'http://localhost:5000';
+const API_URL =
+  window.location.hostname === 'localhost'
+    ? 'http://localhost:5000'
+    : 'https://real-estate-backend.geimaj.now.sh ';
 
 const emptyCountry = {
   id: null,
@@ -250,14 +253,6 @@ export default {
     });
   },
 
-  async addPerson(person) {
-    return fetch(`${API_URL}/post/person.php`, {
-      method: 'POST',
-      body: JSON.stringify(person),
-    }).then((res) => {
-      return res.json();
-    });
-  },
   async addListing(listing) {
     return fetch(`${API_URL}/post/available.php`, {
       method: 'POST',
@@ -274,10 +269,51 @@ export default {
       return res.json();
     });
   },
+  async addPerson(person) {
+    return fetch(`${API_URL}/post/person.php`, {
+      method: 'POST',
+      body: JSON.stringify(person),
+    }).then((res) => {
+      return res.json();
+    });
+  },
   async updatePerson(person) {
     return fetch(`${API_URL}/put/person.php`, {
       method: 'POST',
       body: JSON.stringify(person),
+    }).then((res) => {
+      return res.json();
+    });
+  },
+  async addAgent(agent) {
+    let parms = {
+      id: agent,
+    };
+    return fetch(`${API_URL}/post/agent.php`, {
+      method: 'POST',
+      body: JSON.stringify(parms),
+    }).then((res) => {
+      return res.json();
+    });
+  },
+  async addBuyer(buyer) {
+    let parms = {
+      id: buyer,
+    };
+    return fetch(`${API_URL}/post/buyer.php`, {
+      method: 'POST',
+      body: JSON.stringify(parms),
+    }).then((res) => {
+      return res.json();
+    });
+  },
+  async addSeller(seller) {
+    let parms = {
+      id: seller,
+    };
+    return fetch(`${API_URL}/post/seller.php`, {
+      method: 'POST',
+      body: JSON.stringify(parms),
     }).then((res) => {
       return res.json();
     });

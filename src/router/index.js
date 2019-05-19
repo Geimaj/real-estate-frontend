@@ -12,6 +12,7 @@ import People from '@/components/People';
 import Agents from '@/components/statistics/Agents';
 import Listings from '@/components/Listings';
 import Sales from '@/components/Sales';
+import Sale from '@/components/statistics/Sale';
 
 Vue.use(Router);
 
@@ -76,6 +77,11 @@ export default new Router({
       path: '/sales',
       name: 'Sales',
       component: Sales,
+    },
+    {
+      path: '/statistics/sale',
+      name: 'SaleStatistics',
+      component: Sale,
     },
   ],
 });
