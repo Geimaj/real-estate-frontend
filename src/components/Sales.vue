@@ -69,7 +69,6 @@ export default {
   methods: {
     load() {
       API.getSalesDetails().then((sales) => {
-        console.log(sales);
         this.sales = sales;
       });
     },

@@ -185,34 +185,36 @@ export default {
   methods: {
     load() {
       API.getAvailable().then((properties) => {
-        this.properties = properties;
+        if (properties.length > 0) {
+          this.properties = properties;
 
-        let suburbIds = [];
-        let uniqueSuburbs = properties
-          .map((property) => property.address.street.suburb)
-          .sort((a, b) => a.id > b.id)
-          .filter((suburb, index, self) => {
-            return (
-              suburbIds.indexOf(suburb.id) < 0 && suburbIds.push(suburb.id)
-            );
-          });
+          let suburbIds = [];
+          let uniqueSuburbs = properties
+            .map((property) => property.address.street.suburb)
+            .sort((a, b) => a.id > b.id)
+            .filter((suburb, index, self) => {
+              return (
+                suburbIds.indexOf(suburb.id) < 0 && suburbIds.push(suburb.id)
+              );
+            });
 
-        let cityIds = [];
-        let uniqueCities = uniqueSuburbs
-          .map((suburb) => suburb.city)
-          .sort((a, b) => a.id > b.id)
-          .filter((city, index, self) => {
-            return cityIds.indexOf(city.id) < 0 && cityIds.push(city.id);
-          });
+          let cityIds = [];
+          let uniqueCities = uniqueSuburbs
+            .map((suburb) => suburb.city)
+            .sort((a, b) => a.id > b.id)
+            .filter((city, index, self) => {
+              return cityIds.indexOf(city.id) < 0 && cityIds.push(city.id);
+            });
 
-        this.cities = uniqueCities;
-        this.suburbs = uniqueSuburbs;
+          this.cities = uniqueCities;
+          this.suburbs = uniqueSuburbs;
 
-        this.filteredSearchItems = uniqueCities;
+          this.filteredSearchItems = uniqueCities;
 
-        let searchTyes = API.searchTypes;
-        this.searchTypes = searchTyes;
-        this.searchType = this.searchTypes[0];
+          let searchTyes = API.searchTypes;
+          this.searchTypes = searchTyes;
+          this.searchType = this.searchTypes[0];
+        }
       });
     },
     getPhoto(src) {
