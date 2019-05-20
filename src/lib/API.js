@@ -424,8 +424,8 @@ export default {
     let minPrice = search.price.min || 0;
     let maxPrice = search.price.max || -1;
     let pool = search.pool.value;
-    let baths = search.baths.value || 0;
-    let beds = search.beds.value || 0;
+    let baths = search.baths >= 1 ? search.baths : 0;
+    let beds = search.beds >= 1 ? search.beds : 0;
 
     let url = `${API_URL}/get/search/search.php?cityID=${cityID}&\
 suburbID=${suburbID}&\
