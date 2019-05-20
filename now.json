@@ -1,11 +1,12 @@
 {
   "version": 2,
   "name": "real-estate-frontend",
+  "alias": "real-estate-frontend",
   "builds": [
     {
       "src": "package.json",
       "use": "@now/static-build",
-      "config": { "distDir": "build" }
+      "config": { "distDir": "dist" }
     }
   ]
 }

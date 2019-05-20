@@ -1,7 +1,7 @@
 const API_URL =
   window.location.hostname === 'localhost'
     ? 'http://localhost:5000'
-    : 'https://real-estate-backend.geimaj.now.sh ';
+    : 'https://nameless-temple-89949.herokuapp.com';
 
 const emptyCountry = {
   id: null,

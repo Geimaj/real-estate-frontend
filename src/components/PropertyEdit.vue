@@ -312,6 +312,9 @@ export default {
         this.bindStreets();
       }
     },
+    property: async function(property) {
+      this.listing = await API.getAvailable(property.id || -1);
+    },
   },
   methods: {
     load(id) {
