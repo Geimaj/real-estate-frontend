@@ -336,6 +336,7 @@ export default {
     return fetch(`${API_URL}/get/sale.php`)
       .then((res) => res.json())
       .then((sales) => {
+        console.log(sales);
         let years = [];
         let result = sales
           .map((sale) => new Date(sale.date).getUTCFullYear())

@@ -215,19 +215,27 @@ export default {
   methods: {
     load() {
       //get years for select
-      API.getSaleYears().then((years) => (this.years = years));
+      API.getSaleYears().then((years) => {
+        console.log(years);
+        if (years.length > 0) {
+          this.years = years;
+        }
+      });
       //get data for selected year
       this.loadSalesData();
     },
     loadSalesData() {
       API.getAgentMax(this.year).then((agent) => {
+        console.log(agent);
         this.max = agent;
       });
       API.getAgentAvg(this.year).then((agent) => {
         this.avg = agent;
       });
       API.getAgentStats(this.year).then((agents) => {
-        this.agents = agents;
+        if (agents.length > 0) {
+          this.agents = agents;
+        }
       });
     },
 
