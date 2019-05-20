@@ -353,6 +353,11 @@ export default {
       .then((res) => res.json())
       .catch((error) => []);
   },
+  async getSalesDetails() {
+    return fetch(`${API_URL}/get/salesDetails.php`)
+      .then((res) => res.json())
+      .catch((error) => []);
+  },
   async getAgentStats(year) {
     return fetch(`${API_URL}/get/stats/agents.php?year=${year}`)
       .then((res) => {

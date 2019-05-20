@@ -6,9 +6,7 @@
     </v-toolbar>
     <v-data-table :headers="headers" :items="sales" class="elevation-1">
       <template v-slot:items="props">
-        <td class="text-xs-right">
-          {{ props.item.amount }}
-        </td>
+        <td class="text-xs-right">R{{ props.item.amount }}</td>
         <td class="text-xs-right">
           <a :href="`/#/property/${props.item.propertyID}`">
             {{ props.item.propertyID }}
@@ -18,10 +16,10 @@
           {{ props.item.date }}
         </td>
         <td class="text-xs-right">
-          {{ props.item.agentID }}
+          {{ props.item.agentLastName }}
         </td>
         <td class="text-xs-right">
-          {{ props.item.buyerID }}
+          {{ props.item.buyerLastName }}
         </td>
       </template>
     </v-data-table>
@@ -70,7 +68,8 @@ export default {
 
   methods: {
     load() {
-      API.getSales().then((sales) => {
+      API.getSalesDetails().then((sales) => {
+        console.log(sales);
         this.sales = sales;
       });
     },
