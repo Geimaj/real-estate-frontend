@@ -68,7 +68,8 @@
                     <v-text-field
                       v-model="editedPerson.dob"
                       label="Date of Birth"
-                      mask="##/##/####"
+                      mask="##-##-####"
+                      return-masked-value
                       required
                     ></v-text-field>
                   </v-flex>
@@ -199,19 +200,14 @@ export default {
         promise
           .then((res) => {
             if (this.editedPerson.agentID) {
-              API.addAgent(res.id).then((agent) => {
-                console.log(agent);
-              });
-              API.addBuyer(res.id).then((buyer) => {
-                console.log(buyer);
-              });
-              API.addSeller(res.id).then((seller) => {
-                console.log(seller);
-              });
-            } else {
-              //delete agent
+              API.addAgent(res.id).then((agent) => {});
             }
-
+            if (this.editedPerson.buyerID) {
+              API.addBuyer(res.id).then((buyer) => {});
+            }
+            if (this.editedPerson.sellerID) {
+              API.addSeller(res.id).then((seller) => {});
+            }
             this.load();
             this.close();
           })
@@ -224,11 +220,6 @@ export default {
       this.editedIndex = -1;
     },
     editItem(item) {
-      console.log(item);
-      console.log(item.buyerID);
-      console.log(item.sellerID);
-      console.log(item.agentID);
-
       this.editedIndex = this.people.indexOf(item);
       this.editedPerson = Object.assign({}, item);
       this.dialog = true;

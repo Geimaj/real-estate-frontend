@@ -132,6 +132,12 @@
     </v-tab-item>
     <v-tab-item>
       <v-form v-model="valid">
+        <v-alert v-model="alert" dismissible type="success">
+          The listing has been removed.
+        </v-alert>
+        <v-alert :value="error" color="error" icon="new_releases">
+          Error during the sale!
+        </v-alert>
         <v-container>
           <v-layout row wrap>
             <v-flex xs3 md4>
@@ -230,6 +236,8 @@ export default {
   data() {
     return {
       valid: true,
+      alert: false,
+      error: false,
       property: API.emptyProperty,
       listing: API.emptyListing,
       dialog: false,
@@ -398,10 +406,15 @@ export default {
       this.$router.go(-1);
     },
     sell() {
-      API.makeSale(this.listing).then((sale) => {
-        alert('sold');
-        console.log(sale);
-      });
+      API.makeSale(this.listing)
+        .then((sale) => {
+          this.alert = true;
+          console.log(sale);
+        })
+        .catch((error) => {
+          this.error = true;
+        });
+      this.dialog = false;
     },
     bindCities() {
       this.filteredCities = this.cities.filter((city) => {
