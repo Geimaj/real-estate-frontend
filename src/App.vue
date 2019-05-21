@@ -93,7 +93,7 @@
 <script>
 export default {
   data: () => ({
-    drawer: false,
+    drawer: true,
     addressItems: [
       ['Country', 'outlined_flag'],
       ['City', 'commute'],
