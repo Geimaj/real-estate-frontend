@@ -408,6 +408,8 @@ export default {
 
           API.addProperty(property).then((prop) => {
             this.property = prop;
+              this.$router.go(-1);
+
           });
         });
       }
