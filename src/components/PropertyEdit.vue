@@ -132,6 +132,9 @@
     </v-tab-item>
     <v-tab-item>
       <v-form v-model="valid">
+        <v-alert v-model="listingAlert" dismissible type="success">
+          The property has been listed for sale.
+        </v-alert>
         <v-alert v-model="alert" dismissible type="success">
           The listing has been removed.
         </v-alert>
@@ -238,6 +241,7 @@ export default {
       valid: true,
       alert: false,
       error: false,
+      listingAlert: false,
       property: API.emptyProperty,
       listing: API.emptyListing,
       dialog: false,
@@ -312,13 +316,13 @@ export default {
         this.bindStreets();
       }
     },
-    property: async function(property) {
-      this.listing = await API.getAvailable(property.id || -1);
-    },
+    // property: async function(property) {
+    //   this.listing = await API.getAvailable(property.id || -1);
+    // },
   },
   methods: {
     load(id) {
-      API.getProperty(id).then((property) => {
+      API.getProperty(id).then(async (property) => {
         this.property = property;
         this.country = property.address.street.suburb.city.country;
         this.city = property.address.street.suburb.city;
@@ -326,10 +330,8 @@ export default {
         this.street = property.address.street;
         this.address = property.address;
 
-        this.listing = API.getAvailable(property.propertyID).then((res) => {
-          console.log(res);
-          this.listing = res;
-        });
+        const listing = await API.getAvailable(property.propertyID);
+        this.listing = listing;
 
         API.getPropertyPhotos(this.property.propertyID).then((photos) => {
           this.photos = photos;
@@ -372,7 +374,9 @@ export default {
       } else {
         console.log('add listing')
         API.addListing(this.listing).then((listing) => {
+          console.log(listing)
           this.listing = listing;
+          this.listingAlert = true;
         });
       }
     },
@@ -416,6 +420,7 @@ export default {
         .then((sale) => {
           this.alert = true;
           console.log(sale);
+          this.listing = API.emptyListing;
         })
         .catch((error) => {
           this.error = true;

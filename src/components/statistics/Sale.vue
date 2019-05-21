@@ -20,7 +20,7 @@
 
     <v-card-text>
       <div class="display-1 font-weight-thin">
-        Sales from {{ years[0] }} - {{ years[years.length - 1] }}
+        Sales from {{ years[0] }} - {{ years[years.length - 1] || years[0] }}
       </div>
     </v-card-text>
 
