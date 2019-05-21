@@ -65,14 +65,6 @@
         <td class="text-xs-right">
           {{ props.item.suburb && props.item.suburb.city.country.name }}
         </td>
-        <td class="justify-center layout px-0">
-          <v-icon small class="mr-2" @click="editItem(props.item)">
-            edit
-          </v-icon>
-          <v-icon small @click="deleteItem(props.item)">
-            delete
-          </v-icon>
-        </td>
       </template>
     </v-data-table>
   </div>
@@ -104,7 +96,6 @@ export default {
         { text: 'ZIP', value: 'suburb.zip' },
         { text: 'City', value: 'suburb.city.name' },
         { text: 'Country', value: 'suburb.city.country.name' },
-        { text: 'Actions', value: 'name', sortable: false },
       ],
       streets: [
         {

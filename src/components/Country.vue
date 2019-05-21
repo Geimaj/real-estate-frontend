@@ -38,14 +38,6 @@
     <v-data-table :headers="headers" :items="countries" class="elevation-1">
       <template v-slot:items="props">
         <td>{{ props.item.name }}</td>
-        <td class="justify-center layout px-0">
-          <v-icon small class="mr-2" @click="editCountry(props.item)">
-            edit
-          </v-icon>
-          <v-icon small @click="deleteCountry(props.item)">
-            delete
-          </v-icon>
-        </td>
       </template>
     </v-data-table>
   </div>
@@ -67,11 +59,6 @@ export default {
           text: 'Name',
           align: 'left',
           value: 'name',
-        },
-        {
-          text: 'Actions',
-          align: 'left',
-          sortable: false,
         },
       ],
       countries: [],
