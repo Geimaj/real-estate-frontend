@@ -363,11 +363,14 @@ export default {
     },
     addListing() {
       this.listing.propertyID = this.property.propertyID;
+      console.log(this.listing)
       if (this.listing.id > 0) {
+        console.log('update listing')
         API.updateListing(this.listing).then((listing) => {
           this.listing = listing;
         });
       } else {
+        console.log('add listing')
         API.addListing(this.listing).then((listing) => {
           this.listing = listing;
         });
